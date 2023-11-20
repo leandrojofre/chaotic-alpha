@@ -1,0 +1,21 @@
+{
+	"player": {
+		"src": "./img/npc/player/overworld.png",
+		"room": "home",
+		"width": 32,
+		"height": 64,
+		"sy": 0,
+		"frameSpeed": 8
+	},
+	"placeholder": {
+		"src": "./img/npc/overworld.png",
+		"room": "home",
+		"x": 224,
+		"y": 288,
+		"width": 32,
+		"height": 64,
+		"sy": 0,
+		"animate": true,
+		"frameSpeed": 10
+	}
+}

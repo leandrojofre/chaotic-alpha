@@ -1,0 +1,66 @@
+@font-face {
+	font-family: PressStart2P;
+	src: url(./PressStart2P-Regular.ttf) format("opentype");
+	font-display: block;
+}
+
+html {
+	cursor: url(./img/cursor.png) 20 20, pointer;
+}
+
+body {
+	font-family: 'PressStart2P', cursive;
+	margin: 0px;
+	overflow-y: hidden;
+	background-color: #68071c;
+}
+
+canvas {
+	position: absolute;
+	width: 800px;
+	height: 640px;
+	border: 5px solid #910523;
+}
+
+img {
+	image-rendering: pixelated;
+}
+
+#overworld, #pause-menu, #animation {
+	display: none;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 8px;
+}
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0);
+}
+::-webkit-scrollbar-thumb {
+	background: #910523;
+	border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #910523;
+}
+
+.menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+
+	width: 640px;
+	height: 640px;
+	background: #910523;
+	border: 5px solid #910523;
+}
+
+.button {
+	width: 128px;
+	height: 32px;
+	border: 5px solid #68071c;
+	cursor: url(./img/cursor1.png) 20 20, pointer;
+}

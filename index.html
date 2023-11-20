@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+		<title>GFTC</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1'>
+		<link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+	</head>
+	<body>
+		<section id="main-menu" class="menu" style="display: none;">
+			<input type="button" class="button" id="button-play">
+		</section>
+
+		<section id="game">
+			<div id="sound-box"></div>
+			<canvas id="overworld"></canvas>
+			<canvas id="animation"></canvas>
+		</section>
+
+		<section id="pause-menu" class="menu" style="display: none;">
+			<input type="button" class="button" id="button-resume">
+		</section>
+
+		<script src="data/variables.js"></script>
+		<script src="data/classes.js"></script>
+		<script src="data/keyEvents.js"></script>
+		<script src="main.js" onload="startGame()"></script>
+	</body>
+</html>
