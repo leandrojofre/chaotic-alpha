@@ -1,14 +1,18 @@
 {
 	"player": {
 		"src": "./img/npc/player/overworld.png",
+		"name": "Kofe",
 		"room": "home",
 		"width": 32,
 		"height": 64,
 		"sy": 0,
-		"frameSpeed": 8
+		"frameSpeed": 8,
+		"textColor": "#462c39",
+		"textBackground": "#ee5e5c"
 	},
 	"placeholder": {
-		"src": "./img/npc/overworld.png",
+		"src": "./img/npc/placeholder/overworld.png",
+		"name": "placeholder",
 		"room": "home",
 		"x": 224,
 		"y": 288,
@@ -16,6 +20,10 @@
 		"height": 64,
 		"sy": 0,
 		"animate": true,
-		"frameSpeed": 10
+		"frameSpeed": 12,
+		"lvl": 0,
+		"lvlProgression": 0,
+		"textColor": "black",
+		"textBackground": "white"
 	}
 }

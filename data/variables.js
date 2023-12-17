@@ -1,5 +1,6 @@
 const $CANVAS_OVERWORLD = document.getElementById("overworld");
 const $CANVAS_ANIMATION = document.getElementById("animation");
+const $TEXT_BOX_NPC_SPEAK = document.getElementById("speak-with-npc")
 const BASE_VELOCITY = 4;
 const WIDTH = 32;
 const HEIGHT = 32;
