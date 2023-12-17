@@ -1,3 +1,23 @@
+function catchEvent() {
+	for(const NPC of Object.keys(thisRoomNpcs))
+		if (collision(player.hitbox, thisRoomNpcs[NPC].eventBox, "all-still")) return thisRoomNpcs[NPC].eventBox;
+
+	for(const TILE of thisRoom.events)
+		if (collision(player.hitbox, TILE, "all-still")) return TILE;
+}
+
+function startEvent(eventTrigger) {
+	let eventTriggerName = eventTrigger.name;
+
+	if (eventTrigger.type === "npc") {
+		let npc = npcs[eventTriggerName.toLowerCase()];
+		return EVENTS_NPCS[npc.name.toLowerCase()][npc.lvl][npc.lvlProgression]();
+	}
+
+	if (eventTrigger.type === "room")
+		return EVENTS_ROOMS[eventTriggerName]();
+}
+
 function keyDown(e) {
 	let key = e.key.toLowerCase();
 
@@ -52,6 +72,10 @@ function keyUp(e) {
 			KEY_PRESSED.d = false;
 			if (KEY_PRESSED.a) return player.Vx = BASE_VELOCITY, player.sy = player.sHeight;
 			player.Vx = 0;
+			break;
+		case "e":
+			let event = catchEvent();
+			if (event !== undefined) startEvent(event);
 			break;
 		default:
 			break;

@@ -1,17 +1,24 @@
 function collision(obj1, obj2, axis) {
-	if (axis === 'x')
+	if (axis === "x")
 		return (
 			obj1.y < obj2.y + obj2.height &&
 			obj1.y + obj1.height > obj2.y &&
 			obj1.x + obj1.width - obj1.Vx > obj2.x &&
 			obj1.x - obj1.Vx < obj2.x + obj2.width
 		);
-	if (axis === 'y')
+	if (axis === "y")
 		return (
 			obj1.y - obj1.Vy < obj2.y + obj2.height &&
 			obj1.y + obj1.height - obj1.Vy > obj2.y && 
 			obj1.x + obj1.width > obj2.x &&
 			obj1.x < obj2.x + obj2.width
+		);
+	if (axis === "all-still")
+		return (
+			obj1.y - BASE_VELOCITY < obj2.y + obj2.height &&
+			obj1.y + obj1.height + BASE_VELOCITY > obj2.y && 
+			obj1.x + obj1.width + BASE_VELOCITY > obj2.x &&
+			obj1.x - BASE_VELOCITY < obj2.x + obj2.width
 		);
 }
 
@@ -24,14 +31,17 @@ function moveObjects(x, y) {
 
 function drawObjects() {
 	thisRoom.draw();
+	thisRoom.drawWarning();
 
 	let drawables = [player];
-	for (const KEY of Object.keys(thisRoomNpcs))
+	for (const KEY of Object.keys(thisRoomNpcs)) {
 		drawables.push(thisRoomNpcs[KEY]);
+		thisRoomNpcs[KEY].drawWarning();
+	}
 
 	if (thisRoom.foregrounds[0] !== undefined) drawables.push(...thisRoom.foregrounds);
 
-	drawables.sort((a, b) => a.y - b.y);
+	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
 }
 
@@ -39,18 +49,23 @@ function gameUpdate() {
 	animationID = window.requestAnimationFrame(gameUpdate);
 	context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	context.fillStyle = "lightblue";
-	context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+	thisRoom.drawBackground();
 	drawObjects();
+	thisRoom.drawRoof();
+	
 	player.walk();
-
 }
 
 function startGameUpdate() {
 	gameUpdate();
 	window.addEventListener("keydown", keyDown);
 	window.addEventListener("keyup", keyUp);
+}
+
+function stopGameUpdate() {
+	window.cancelAnimationFrame(animationID);
+	window.removeEventListener("keydown", keyDown);
+	window.removeEventListener("keyup", keyUp);
 }
 
 async function loadFonts(fontName, url) {
@@ -83,24 +98,6 @@ async function timeOut(timeInSeconds) {
 	await new Promise(resolve => setTimeout(resolve, timeInSeconds * 1000));
 }
 
-function changeRoom(roomName, tileName) {
-	player.room = roomName;
-
-	for (const KEY of Object.keys(rooms))
-		if (rooms[KEY].name === player.room) thisRoom = rooms[KEY];
-
-	thisRoomNpcs = {};
-	for (const KEY of Object.keys(npcs))
-		if (npcs[KEY].room === player.room) thisRoomNpcs[KEY] = npcs[KEY];
-
-	let tile = thisRoom.events.find(tile => tile.name === tileName);
-	let offsetX = player.hitbox.x - tile.x - (tile.width / 2 - player.hitbox.width / 2);
-	let offsetY = player.hitbox.y - tile.y - (tile.height / 2 - player.hitbox.height / 2);
-
-	moveObjects(offsetX, offsetY);
-	startGameUpdate();
-}
-
 function joinTiles(tileArray) {
 	let isAdjacent = (obj1, obj2, priorAxis, secAxis, priorGap, secGap) => {
 		return (
@@ -110,20 +107,22 @@ function joinTiles(tileArray) {
 		);
 	}
 
+	tileArray.sort((a, b) => a.x - b.x);
+
 	let i = 0;
 	while (i < tileArray.length - 1) {
-		if (isAdjacent(tileArray[i], tileArray[i + 1], "x", "y", "width", "height")) {
-			tileArray[i].expandWidth();
+		if (isAdjacent(tileArray[i], tileArray[i + 1], "y", "x", "height", "width")) {
+			tileArray[i].expandHeight();
 			tileArray.splice(i + 1, 1);
 		} else i++;
 	}
 
-	tileArray.sort((a, b) => a.x - b.x);
+	tileArray.sort((a, b) => a.y - b.y);
 
 	i = 0;
 	while (i < tileArray.length - 1) {
-		if (isAdjacent(tileArray[i], tileArray[i + 1], "y", "x", "height", "width")) {
-			tileArray[i].expandHeight();
+		if (isAdjacent(tileArray[i], tileArray[i + 1], "x", "y", "width", "height")) {
+			tileArray[i].expandWidth();
 			tileArray.splice(i + 1, 1);
 		} else i++;
 	}
@@ -134,7 +133,7 @@ function createTileObjects(room, jsonData) {
 	let findLayer = layerName => layers.find(layer => layer.name === layerName);
 	
 	const ROW_LENGTH = room.width / WIDTH;
-	const SIMBOL_COLLISION = jsonData.tilesets.find(set => set.source === "bounds.tsx").firstgid;
+	const SIMBOL_COLLISION = jsonData.tilesets.find(tileSet => tileSet.source === "tileset-tsx\/bounds.tsx").firstgid;
 	const SIMBOL_FOREGROUND = SIMBOL_COLLISION + 2;
 
 	let boundsData = findLayer("bounds").data;
@@ -195,7 +194,6 @@ async function startGame() {
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
-				json[KEY].name = KEY.charAt(0).toUpperCase() + KEY.slice(1, KEY.length);
 				npcs[KEY] = new Npc(json[KEY]);
 			}
 		});
@@ -211,5 +209,5 @@ async function startGame() {
 	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
 
 	$CANVAS_OVERWORLD.style.display = "flex";
-	changeRoom(player.room, "entrance");
+	changeRoom(player.room, "exitHome");
 }

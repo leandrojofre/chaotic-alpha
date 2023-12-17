@@ -13,36 +13,23 @@ body {
 	margin: 0px;
 	overflow-y: hidden;
 	background-color: #68071c;
+	user-select: none;
 }
 
 canvas {
 	position: absolute;
 	width: 800px;
 	height: 640px;
-	border: 5px solid #910523;
 }
 
 img {
 	image-rendering: pixelated;
 }
 
-#overworld, #pause-menu, #animation {
-	display: none;
-}
-
-::-webkit-scrollbar {
-	width: 10px;
-	height: 8px;
-}
-::-webkit-scrollbar-track {
-	background: rgba(0, 0, 0, 0);
-}
-::-webkit-scrollbar-thumb {
-	background: #910523;
-	border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: #910523;
+p {
+	margin: 5px 5px;
+	font-size: 8px;
+	overflow-wrap: break-word;
 }
 
 .menu {
@@ -63,4 +50,54 @@ img {
 	height: 32px;
 	border: 5px solid #68071c;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
+}
+
+.speaker {
+	display: none;
+	position: absolute;
+	width: 256px;
+	height: 256px;
+	top: 128px;
+}
+
+.text-box {
+	position: absolute;
+}
+
+#overworld, #pause-menu, #animation {
+	display: none;
+}
+
+#speak-with-npc {
+	display: none;
+	flex-direction: column;
+	top: 485px;
+	left: 37px;
+	height: 128px;
+	width: 736px;
+}
+
+#speaker-1 {
+	transform: scaleX(-1);
+}
+
+#game {
+	border: 5px solid #910523;
+	width: 800px;
+	height: 640px;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 8px;
+}
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0);
+}
+::-webkit-scrollbar-thumb {
+	background: #910523;
+	border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #910523;
 }

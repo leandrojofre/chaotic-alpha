@@ -19,11 +19,22 @@ class Tile {
 		this.y += y;
 		this.x += x;
 	}
+
+	drawColor(color) {
+		context.fillStyle = color;
+		context.fillRect(this.x, this.y, this.width, this.height);		
+	}
 }
 
 class CollisionTile extends Tile {
 	constructor(x, y, width, height) {
 		super(x, y, true, width, height);
+	}
+}
+
+class Hitbox extends CollisionTile {
+	constructor(x, y, width, height) {
+		super(x, y, width, height);
 	}
 
 	collided(axis) {
@@ -35,22 +46,22 @@ class CollisionTile extends Tile {
 		
 		return false;
 	}
-
-	draw() {
-		context.fillStyle='red';
-		context.fillRect(this.x, this.y, this.width, this.height);		
-	}
 }
 
 class EventTile extends Tile {
-	constructor(x, y, width, height, name, warningName = "exclamation") {
+	constructor(x, y, width, height, name, type = "room", warningName = "exclamation") {
 		super(x, y, false, width, height);
 		this.name = name;
+		this.type = type;
 		this.warningImg = EVENT_WARNINGS[warningName];
 	}
 
-	drawWarning() {
-		context.drawImage(this.warningImg, player.x, player.y - HEIGHT, WIDTH, HEIGHT);
+	changeWarningImg(warningImg) {
+		this.warningImg = warningImg;
+	}
+
+	drawWarning(target) {
+		context.drawImage(this.warningImg, target.x, target.y - HEIGHT, WIDTH, HEIGHT);
 	}
 }
 
@@ -74,15 +85,14 @@ class ForegroundTile extends Tile {
 			this.y,
 			this.width,
 			this.height
-		);
-		// context.fillStyle='blue';
-		// context.fillRect(this.x, this.y, this.width, this.height);		
+		);	
 	}
 }
 
 class Room {
-	constructor({ name, x, y, width, height, src, foregroundSrc }) {
+	constructor({ name, x, y, width, height, src, foregroundSrc, roofSrc,backgroundColor }) {
 		this.name = name;
+		this.backgroundColor = backgroundColor;
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -91,9 +101,16 @@ class Room {
 		this.img.src = src;
 		this.foregroundImg = new Image();
 		this.foregroundImg.src = foregroundSrc;
+		this.roofImg = new Image();
+		this.roofImg.src = roofSrc;
 		this.events = [];
 		this.collisions = [];
 		this.foregrounds = [];
+	}
+
+	drawWarning() {
+		for (const TILE of this.events)
+			if (collision(player.hitbox, TILE, "all-still")) return TILE.drawWarning(player);
 	}
 
 	draw() {
@@ -101,29 +118,39 @@ class Room {
 		context.drawImage(this.img, this.x, this.y, this.width, this.height);
 		context.drawImage(this.foregroundImg, this.x, this.y, this.width, this.height);
 	}
+
+	drawBackground() {
+		context.fillStyle = this.backgroundColor;
+		context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	}
+
+	drawRoof() {
+		context.imageSmoothingEnabled = false;
+		context.drawImage(this.roofImg, this.x, this.y, this.width, this.height);
+	}
 	
 	move(x, y) {
 		this.x += x;
 		this.y += y;
 
-		this.collisions.forEach(tile => tile.move(x, y));
-		this.foregrounds.forEach(tile => tile.move(x, y));
+		[...this.events, ...this.collisions, ...this.foregrounds].forEach(tile => tile.move(x, y));
 	}
 }
 
 class Sprite {
-	constructor({ src, x, y, width, height, sy, animate, sWidth, sHeight, frameSpeed }) {
+	constructor({ src, name, x, y, width, height, sy, animate, sWidth, sHeight, frameSpeed }) {
 		this.img = new Image();
 		this.img.src = src;
+		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.sx = 0;
 		this.sy = sy;
+		this.animate = animate ?? false;
 		this.sWidth = sWidth ?? width;
 		this.sHeight = sHeight ?? height;
-		this.animate = animate ?? false;
 		this.frameRate = 0;
 		this.frameSpeed = frameSpeed ?? 18;
 		this.frameStart = 1;
@@ -132,6 +159,9 @@ class Sprite {
 
 	draw() {
 		context.imageSmoothingEnabled = false;
+
+		// this.eventBox?.drawColor("green");
+		// this.hitbox?.drawColor("red");
 	
 		context.drawImage(
 			this.img,
@@ -144,24 +174,20 @@ class Sprite {
 			this.width,
 			this.height
 		);
-		
-		// this.hitbox?.draw();
 	
 		if (!this.animate) return;
 		if (!(animationID % this.frameSpeed === 0)) return;
-		console.log(animationID);
 	
 		this.frameRate++;
 		if (this.frameRate >= this.frameEnd)
 			this.frameRate = this.frameStart;
 	
 		this.sx = this.frameRate * (this.sWidth);
-
 	}
 }
 
 class Character extends Sprite {
-	constructor({ src, width, room, height, sy, frameSpeed }) {
+	constructor({ src, width, height, sy, frameSpeed, name, room, textColor, textBackground }) {
 		super({
 			src,
 			x: SCREEN_WIDTH / 2 - width / 2,
@@ -169,12 +195,15 @@ class Character extends Sprite {
 			width,
 			height,
 			sy,
-			frameSpeed
+			frameSpeed,
+			name
 		});
 		this.room = room;
+		this.textColor = textColor;
+		this.textBackground = textBackground;
 		this.Vx = 0;
 		this.Vy = 0;
-		this.hitbox = new CollisionTile(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
+		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
 	}
 
 	walk() {
@@ -194,16 +223,33 @@ class Character extends Sprite {
 }
 
 class Npc extends Sprite {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, room, name }) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed });
-		this.name = name;
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground, lvl, lvlProgression }) {
+		super({ src, x, y, width, height, sy, animate, frameSpeed, name });
 		this.room = room;
-		this.hitbox = new CollisionTile(x + width / 4, y + height - width / 2, width / 2, width / 2);
+		this.textColor = textColor;
+		this.textBackground = textBackground;
+		this.lvl = lvl;
+		this.lvlProgression = lvlProgression;
+		this.hitbox = new Hitbox(x + width / 4, y + height - width / 2, width / 2, width / 2);
+		this.eventBox = new EventTile(
+			this.hitbox.x - WIDTH,
+			this.hitbox.y - HEIGHT,
+			WIDTH * 2 + this.hitbox.width,
+			HEIGHT * 2 + this.hitbox.height,
+			name,
+			"npc",
+			"talk"
+		);
+	}
+
+	drawWarning() {
+		if (collision(player.hitbox, this.eventBox, "all-still")) this.eventBox.drawWarning(this);
 	}
 
 	move(x, y) {
 		this.x += x;
 		this.y += y;
+		this.eventBox.move(x, y);
 		this.hitbox.move(x, y);
 	}
 }
