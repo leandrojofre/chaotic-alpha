@@ -56,6 +56,13 @@ function gameUpdate() {
 	player.walk();
 }
 
+function arrayToPropertiesObject(array) {
+	let obj = {};
+	for(const PROP of array)
+		obj[PROP.name] = PROP.value;
+	return obj;
+}
+
 function startGameUpdate() {
 	gameUpdate();
 	window.addEventListener("keydown", keyDown);
@@ -80,8 +87,8 @@ async function loadImages(images) {
 	let interval;
 	const MAX_IMAGES = images.length;
 
-	for (let i = 0; i < MAX_IMAGES; i++)
-		images[i].onload = () => {
+	for (const IMG of images)
+		IMG.onload = () => {
 			imagesLoaded++;
 			if (imagesLoaded === MAX_IMAGES) return loadIsFinished = true;
 		};
@@ -158,16 +165,10 @@ function createTileObjects(room, jsonData) {
 	});
 
 	let eventsData = findLayer("events").layers;
-	let findPropertie = (propertiesArray, name) =>
-		propertiesArray.find(propertie => propertie.name === name).value;
 
 	for(const TILE of eventsData) {
-		const X = findPropertie(TILE.properties, "x") * WIDTH;
-		const Y = findPropertie(TILE.properties, "y") * HEIGHT;
-		const TILE_WIDTH = findPropertie(TILE.properties, "width") * WIDTH;
-		const TILE_HEIGHT = findPropertie(TILE.properties, "height") * HEIGHT;
-		const NAME = TILE.name;
-		room.events.push(new EventTile(X, Y, TILE_WIDTH, TILE_HEIGHT, NAME));
+		TILE.objects[0].y -= TILE.objects[0].height;
+		room.events.push(new EventTile(TILE.objects[0]));
 	}
 
 	joinTiles(room.collisions);
@@ -189,25 +190,35 @@ async function createCollisionsInRooms() {
 async function startGame() {
 	await fetch(`./data/json/entities.json`)
 		.then(response => response.json())
-		.then(json => {
-			player = new Character(json.player);
+		.then(async (json) => {
+			player = new Player(json.player);
+			let imagesToLoad = [player.img];
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
 				npcs[KEY] = new Npc(json[KEY]);
+				imagesToLoad.push(npcs[KEY].img);
 			}
+
+			await loadImages(imagesToLoad);
 		});
 	
 	await fetch(`./data/json/rooms.json`)
 		.then(response => response.json())
-		.then(json => {
-			for (const KEY of Object.keys(json))
+		.then(async (json) => {
+			let imagesToLoad = [];
+
+			for (const KEY of Object.keys(json)) {
 				rooms[KEY] = new Room(json[KEY]);
+				imagesToLoad.push(rooms[KEY].img, rooms[KEY].foregroundImg);
+			}
+
+			await loadImages(imagesToLoad);
 		});
 
 	await createCollisionsInRooms();
 	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
 
 	$CANVAS_OVERWORLD.style.display = "flex";
-	changeRoom(player.room, "exitHome");
+	changeRoom(player.room, "doorHome-in");
 }

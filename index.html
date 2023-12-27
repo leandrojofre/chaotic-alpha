@@ -19,8 +19,8 @@
 			<div>
 				<img id="speaker-0" class="speaker" src="img/npc/speak-clothe-default.png" style="left: 149px;">
 				<img id="speaker-1" class="speaker" src="img/npc/speak-clothe-default.png" style="left: 405px;">
+				<label class="text-box" id="speak-with-npc"></label>
 			</div>
-			<div class="text-box" id="speak-with-npc"></div>
 		</section>
 
 		<section id="pause-menu" class="menu" style="display: none;">
@@ -29,9 +29,10 @@
 
 		<script src="data/variables.js"></script>
 		<script src="data/classes.js"></script>
-		<script src="data/events-rooms.js"></script>
-		<script src="data/events-npcs.js"></script>
-		<script src="data/events-keys.js"></script>
+		<script src="data/event-actions.js"></script>
+		<script src="events/events-rooms.js"></script>
+		<script src="events/events-npcs.js"></script>
+		<script src="data/event-listeners.js"></script>
 		<script src="main.js" onload="startGame()"></script>
 	</body>
 </html>

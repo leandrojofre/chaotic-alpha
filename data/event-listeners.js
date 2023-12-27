@@ -14,6 +14,12 @@ function startEvent(eventTrigger) {
 		return EVENTS_NPCS[npc.name.toLowerCase()][npc.lvl][npc.lvlProgression]();
 	}
 
+	if (eventTrigger.type === "changeRoom")
+		return changeRoom(
+			eventTrigger.customProperties.targetRoom,
+			eventTrigger.customProperties.targetTile
+		);
+
 	if (eventTrigger.type === "room")
 		return EVENTS_ROOMS[eventTriggerName]();
 }

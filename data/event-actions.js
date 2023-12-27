@@ -1,3 +1,25 @@
+function changeRoom(roomName, tileName) {
+	stopGameUpdate();
+	player.room = roomName;
+
+	for (const KEY of Object.keys(rooms))
+		if (rooms[KEY].name === player.room) {
+			thisRoom = rooms[KEY];
+			break;
+		}
+
+	thisRoomNpcs = {};
+	for (const KEY of Object.keys(npcs))
+		if (npcs[KEY].room === player.room) thisRoomNpcs[KEY] = npcs[KEY];
+
+	let tile = thisRoom.events.find(tile => tile.name === tileName);
+	let offsetX = player.hitbox.x - tile.x - (tile.width / 2 - player.hitbox.width / 2);
+	let offsetY = player.hitbox.y - tile.y - (tile.height / 2 - player.hitbox.height / 2);
+
+	moveObjects(offsetX, offsetY);
+	startGameUpdate();
+}
+
 async function awaitClick(targetElement) {
 	let interval;
 	let userClicked = false;
@@ -33,10 +55,9 @@ async function changeSpeakerImg(speakerNum, speakerName, imgName) {
 	await loadImages([$SPEAKER]);
 }
 
-async function speakWithNpc(dialogues, npc, npcPos) {
-
-	await changeSpeakerImg(npcPos, npc, "default");
-	await changeSpeakerImg(1 - npcPos, "player", "default");
+async function speakWithNpc(dialogues, npc, npcSpeakerPos) {
+	await changeSpeakerImg(npcSpeakerPos, npc, "default");
+	await changeSpeakerImg(1 - npcSpeakerPos, "player", "default");
 
 	drawBlackBackground();
 
@@ -46,8 +67,11 @@ async function speakWithNpc(dialogues, npc, npcPos) {
 	for (const DIALOGUE of dialogues) {
 		generateDialogue(DIALOGUE[0], DIALOGUE[1]);
 
-		if (DIALOGUE[2] !== undefined)
-			await DIALOGUE[2].forEach(newImg => changeSpeakerImg(newImg.speakerNum, newImg.speakerName, newImg.imgName));
+		if (DIALOGUE[2] !== undefined) {
+			await DIALOGUE[2].forEach( newImg =>
+				changeSpeakerImg(newImg.speakerNum, newImg.speakerName, newImg.imgName)
+			);
+		}
 
 		await awaitClick(document);
 	}
@@ -55,28 +79,3 @@ async function speakWithNpc(dialogues, npc, npcPos) {
 	$TEXT_BOX_NPC_SPEAK.style.display = "none";
 	document.querySelectorAll(".speaker").forEach(speaker => speaker.style.display = "none");
 }
-
-// , [{speakerNum: , speakerName: "", imgName: ""}]
-
-
-const EVENTS_NPCS = {
-	placeholder: [
-		[
-			async () => {
-				stopGameUpdate();
-
-				const DIALOGUES = [
-					["placeholder", "HI"],
-					["player", "Uhhh.. Hi?"],
-					["player", "What are you?"],
-					["placeholder", "No more budget for dialogues!"],
-					["player", "..."]
-				]
-
-				await speakWithNpc(DIALOGUES, "placeholder", 1);
-
-				startGameUpdate();
-			}
-		]
-	]
-};

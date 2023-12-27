@@ -49,11 +49,12 @@ class Hitbox extends CollisionTile {
 }
 
 class EventTile extends Tile {
-	constructor(x, y, width, height, name, type = "room", warningName = "exclamation") {
+	constructor({x, y, width, height, name, type = "room", warningName = "exclamation", properties = []}) {
 		super(x, y, false, width, height);
 		this.name = name;
 		this.type = type;
 		this.warningImg = EVENT_WARNINGS[warningName];
+		this.customProperties = arrayToPropertiesObject(properties);
 	}
 
 	changeWarningImg(warningImg) {
@@ -127,6 +128,13 @@ class Room {
 	drawRoof() {
 		context.imageSmoothingEnabled = false;
 		context.drawImage(this.roofImg, this.x, this.y, this.width, this.height);
+
+		// for (const TILE of this.events)
+		// 	TILE.drawColor("rgba(0, 255, 0, 0.3)");
+		// for (const TILE of this.collisions)
+		// 	TILE.drawColor("rgba(255, 0, 0, 0.3)");
+		// for (const TILE of this.foregrounds)
+		// 	TILE.drawColor("rgba(0, 0, 255, 0.3)");
 	}
 	
 	move(x, y) {
@@ -160,8 +168,8 @@ class Sprite {
 	draw() {
 		context.imageSmoothingEnabled = false;
 
-		// this.eventBox?.drawColor("green");
-		// this.hitbox?.drawColor("red");
+		// this.eventBox?.drawColor("rgba(0, 255, 0, 0.3)");
+		// this.hitbox?.drawColor("rgba(255, 0, 0, 0.3)");
 	
 		context.drawImage(
 			this.img,
@@ -186,7 +194,7 @@ class Sprite {
 	}
 }
 
-class Character extends Sprite {
+class Player extends Sprite {
 	constructor({ src, width, height, sy, frameSpeed, name, room, textColor, textBackground }) {
 		super({
 			src,
@@ -232,13 +240,15 @@ class Npc extends Sprite {
 		this.lvlProgression = lvlProgression;
 		this.hitbox = new Hitbox(x + width / 4, y + height - width / 2, width / 2, width / 2);
 		this.eventBox = new EventTile(
-			this.hitbox.x - WIDTH,
-			this.hitbox.y - HEIGHT,
-			WIDTH * 2 + this.hitbox.width,
-			HEIGHT * 2 + this.hitbox.height,
-			name,
-			"npc",
-			"talk"
+			{
+				x: this.hitbox.x - WIDTH,
+				y: this.hitbox.y - HEIGHT,
+				width: WIDTH * 2 + this.hitbox.width,
+				height: HEIGHT * 2 + this.hitbox.height,
+				name,
+				type: "npc",
+				warningName: "talk"
+			}
 		);
 	}
 

@@ -6,5 +6,7 @@
    "editor.insertSpaces": false,
    "breadcrumbs.symbolSortOrder": "type",
    "files.eol": "\n",
-   "liveServer.settings.port": 5501
+   "liveServer.settings.port": 5501,
+   "files.autoSave": "onWindowChange",
+   "terminal.integrated.defaultProfile.windows": "Git Bash"
 }

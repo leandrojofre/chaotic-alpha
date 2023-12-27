@@ -1,0 +1,2 @@
+const EVENTS_ROOMS = {
+};
