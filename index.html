@@ -3,23 +3,48 @@
 	<head>
 		<meta charset='utf-8'>
 		<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-		<title>GFTC</title>
+		<title>Chaotic</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		<link rel='stylesheet' type='text/css' media='screen' href='main.css'>
 	</head>
 	<body>
-		<section id="main-menu" class="menu" style="display: none;">
-			<input type="button" class="button" id="button-play">
+		<section id="main-menu" class="menu">
+			<img class="button" src="./img/button-play.png" onclick="startGame()">
 		</section>
 
 		<section id="game">
 			<div id="sound-box"></div>
 			<canvas id="overworld"></canvas>
-			<canvas id="animation"></canvas>
-			<div>
-				<img id="speaker-0" class="speaker" src="img/npc/speak-clothe-default.png" style="left: 149px;">
-				<img id="speaker-1" class="speaker" src="img/npc/speak-clothe-default.png" style="left: 405px;">
-				<label class="text-box" id="speak-with-npc"></label>
+
+			<div id="overworld-text-box">
+				<div id="npcs-image-box">
+					<img id="speaker-0" class="speaker" src="img/npc/speak-clothe-default.png">
+					<img id="speaker-1" class="speaker" src="img/npc/speak-clothe-default.png">
+				</div>
+				<p id="speak-with-npc"></p>
+			</div>
+
+			<div id="animation-box">
+				<div>
+					<canvas id="animation"></canvas>
+					<div id="interactive-elements"></div>
+				</div>
+
+				<div id="action-buttons">
+					<input id="test1" type="radio" name="action-button" class="radio">
+						<label for="test1" class="animation-action">
+							<img src="./img/button-test1.png">
+						</label>
+					</input>
+
+					<input id="test2" type="radio" name="action-button" class="radio">
+						<label for="test2" class="animation-action">
+							<img src="./img/button-test2.png">
+						</label>
+					</input>
+				</div>
+
+				<p id="speak-animation"></p>
 			</div>
 		</section>
 
@@ -27,12 +52,17 @@
 			<input type="button" class="button" id="button-resume">
 		</section>
 
-		<script src="data/variables.js"></script>
-		<script src="data/classes.js"></script>
-		<script src="data/event-actions.js"></script>
-		<script src="events/events-rooms.js"></script>
-		<script src="events/events-npcs.js"></script>
-		<script src="data/event-listeners.js"></script>
-		<script src="main.js" onload="startGame()"></script>
+		<script src="js/variables.js"></script>
+
+		<script src="classes/Room.js"></script>
+		<script src="classes/Sprite.js"></script>
+		<script src="classes/Tile.js"></script>
+
+		<script src="js/event-actions.js"></script>
+		<script src="js/events/rooms.js"></script>
+		<script src="js/events/npcs.js"></script>
+		<script src="js/event-listeners.js"></script>
+		
+		<script src="main.js"></script>
 	</body>
 </html>

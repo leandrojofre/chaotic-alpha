@@ -1,3 +1,9 @@
+:root {
+	--screen-width: 960px;
+	--screen-height: 640px;
+	--animation-width: 512px;
+}
+
 @font-face {
 	font-family: PressStart2P;
 	src: url(./PressStart2P-Regular.ttf) format("opentype");
@@ -16,20 +22,16 @@ body {
 	user-select: none;
 }
 
-canvas {
-	position: absolute;
-	width: 800px;
-	height: 640px;
-}
-
 img {
 	image-rendering: pixelated;
 }
 
 p {
-	margin: 5px 5px;
-	font-size: 8px;
+	padding: 3px 3px;
+	margin: 0px;
+	font-size: 10px;
 	overflow-wrap: break-word;
+	line-height: 13px;
 }
 
 .menu {
@@ -39,52 +41,112 @@ p {
 	justify-content: center;
 	gap: 8px;
 
-	width: 640px;
-	height: 640px;
+	width: var(--screen-width);
+	height: var(--screen-height);
 	background: #910523;
 	border: 5px solid #910523;
 }
 
-.button {
-	width: 128px;
-	height: 32px;
+.button, button {
 	border: 5px solid #68071c;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
 }
 
+
+.animation-action {
+	display: flex;
+	padding: 0px;
+	border: 0px;
+	width: 64px;
+	height: 64px;
+	align-items: center;
+	justify-content: center;
+	background-color: #fdd89b;
+	cursor: url(./img/cursor1.png) 20 20, pointer;
+
+	& img {
+		border: 5px solid #68071c;
+		width: 64px;
+		height: 64px;
+	}
+}
+
 .speaker {
-	display: none;
-	position: absolute;
+	display: flex;
 	width: 256px;
 	height: 256px;
-	top: 128px;
 }
 
-.text-box {
+#game {
+	border: 5px solid #910523;
+	width: var(--screen-width);
+	height: var(--screen-height);
+}
+
+#overworld-text-box {
+	display: flex;
+	width: var(--screen-width);
+	height: var(--screen-height);
 	position: absolute;
-}
-
-#overworld, #pause-menu, #animation {
-	display: none;
-}
-
-#speak-with-npc {
-	display: none;
 	flex-direction: column;
-	top: 485px;
-	left: 37px;
-	height: 128px;
-	width: 736px;
+	align-items: center;
+	justify-content: space-evenly;	
+}
+
+#npcs-image-box {
+	display: flex;
+	width: var(--screen-width);
+	justify-content: space-around;
 }
 
 #speaker-1 {
 	transform: scaleX(-1);
 }
 
-#game {
-	border: 5px solid #910523;
-	width: 800px;
-	height: 640px;
+#speak-with-npc {
+	height: 128px;
+	width: 736px;
+}
+
+#animation-box {
+	display: flex;
+	width: var(--screen-width);
+	height: var(--screen-height);
+	position: absolute;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+#animation {
+	position: absolute;
+	z-index: 1;
+	width: var(--animation-width);
+	left: calc((var(--screen-width) / 2) - (var(--animation-width) / 2));
+}
+
+#interactive-elements {
+	position: relative;
+	z-index: 2;
+	width: var(--animation-width);
+	height: var(--animation-width);
+}
+
+#action-buttons {
+	display: none;
+	width: 512px;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+
+#speak-animation {
+	display: none;
+	height: 64px;
+	width: 736px;	
+}
+
+#game, #overworld, #overworld-text-box, #animation-box, #pause-menu, .radio {
+	display: none;
 }
 
 ::-webkit-scrollbar {

@@ -7,11 +7,13 @@ Hecho:
 -mejorar "drawObjects" para que dibuje objetos en orden de prioridad dependiendo su posicion en Y
 -mejorar "createTileObjects" para crear foregrounds
 -crear sistema para dibujar foregrounds
+-crear el sistema para hablar con npcs
+-dibujar los sprites para las conversaciones (mas o menos)
+-crear el sistema para poder interacturar con los npcs en eventos elaborados donde se permita realizar acciones que afecten al npcs/entorno
 
 Falta:
--crear el sistema para hablar con npcs
--dibujar los sprites para las conversaciones
+-dibujar las primeras dos habitaciones: "home" & "forest-home" (casa y patio)
 -duolingo
 
 Siguiente:
--dibujar las primeras dos habitaciones: "home" & "forest-home" (casa y patio)
+-sistema de eventos para las habitaciones
