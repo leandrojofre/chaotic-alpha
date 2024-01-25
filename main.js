@@ -3,13 +3,13 @@ function collision(obj1, obj2, axis) {
 		return (
 			obj1.y < obj2.y + obj2.height &&
 			obj1.y + obj1.height > obj2.y &&
-			obj1.x + obj1.width - obj1.Vx > obj2.x &&
-			obj1.x - obj1.Vx < obj2.x + obj2.width
+			obj1.x + obj1.width - (obj1.Vx * obj1.acceleration) > obj2.x &&
+			obj1.x - (obj1.Vx * obj1.acceleration) < obj2.x + obj2.width
 		);
 	if (axis === "y")
 		return (
-			obj1.y - obj1.Vy < obj2.y + obj2.height &&
-			obj1.y + obj1.height - obj1.Vy > obj2.y && 
+			obj1.y - (obj1.Vy * obj1.acceleration) < obj2.y + obj2.height &&
+			obj1.y + obj1.height - (obj1.Vy * obj1.acceleration) > obj2.y && 
 			obj1.x + obj1.width > obj2.x &&
 			obj1.x < obj2.x + obj2.width
 		);
@@ -31,7 +31,6 @@ function moveObjects(x, y) {
 
 function drawObjects() {
 	thisRoom.draw();
-	thisRoom.drawWarning();
 
 	let drawables = [player];
 	for (const KEY of Object.keys(thisRoomNpcs)) {
@@ -43,6 +42,8 @@ function drawObjects() {
 
 	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
+
+	thisRoom.drawWarning();
 }
 
 function gameUpdate() {
@@ -56,16 +57,32 @@ function gameUpdate() {
 	player.walk();
 }
 
-function startGameUpdate() {
-	gameUpdate();
+function startPlayerInput() {
 	window.addEventListener("keydown", keyDown);
-	window.addEventListener("keyup", keyUp);
+	window.addEventListener("keyup", keyUp);	
+}
+
+function stopPlayerInput() {
+	window.removeEventListener("keydown", keyDown);
+	window.removeEventListener("keyup", keyUp);
+}
+
+function startGameUpdate() {
+	context = $CANVAS_OVERWORLD.getContext('2d');
+	gameUpdate();
+	startPlayerInput();	
 }
 
 function stopGameUpdate() {
+	stopPlayerInput();
 	window.cancelAnimationFrame(animationID);
-	window.removeEventListener("keydown", keyDown);
-	window.removeEventListener("keyup", keyUp);
+}
+
+function arrayToPropertiesObject(array) {
+	let obj = {};
+	for(const PROP of array)
+		obj[PROP.name] = PROP.value;
+	return obj;
 }
 
 async function loadFonts(fontName, url) {
@@ -80,8 +97,8 @@ async function loadImages(images) {
 	let interval;
 	const MAX_IMAGES = images.length;
 
-	for (let i = 0; i < MAX_IMAGES; i++)
-		images[i].onload = () => {
+	for (const IMG of images)
+		IMG.onload = () => {
 			imagesLoaded++;
 			if (imagesLoaded === MAX_IMAGES) return loadIsFinished = true;
 		};
@@ -92,10 +109,6 @@ async function loadImages(images) {
 				resolve(clearInterval(interval));
 		}, 100)
 	);
-}
-
-async function timeOut(timeInSeconds) {
-	await new Promise(resolve => setTimeout(resolve, timeInSeconds * 1000));
 }
 
 function joinTiles(tileArray) {
@@ -133,7 +146,7 @@ function createTileObjects(room, jsonData) {
 	let findLayer = layerName => layers.find(layer => layer.name === layerName);
 	
 	const ROW_LENGTH = room.width / WIDTH;
-	const SIMBOL_COLLISION = jsonData.tilesets.find(tileSet => tileSet.source === "tileset-tsx\/bounds.tsx").firstgid;
+	const SIMBOL_COLLISION = jsonData.tilesets.find(tileSet => tileSet.source === "..\/aseprite\/rooms\/bounds.tsx").firstgid;
 	const SIMBOL_FOREGROUND = SIMBOL_COLLISION + 2;
 
 	let boundsData = findLayer("bounds").data;
@@ -158,16 +171,10 @@ function createTileObjects(room, jsonData) {
 	});
 
 	let eventsData = findLayer("events").layers;
-	let findPropertie = (propertiesArray, name) =>
-		propertiesArray.find(propertie => propertie.name === name).value;
 
 	for(const TILE of eventsData) {
-		const X = findPropertie(TILE.properties, "x") * WIDTH;
-		const Y = findPropertie(TILE.properties, "y") * HEIGHT;
-		const TILE_WIDTH = findPropertie(TILE.properties, "width") * WIDTH;
-		const TILE_HEIGHT = findPropertie(TILE.properties, "height") * HEIGHT;
-		const NAME = TILE.name;
-		room.events.push(new EventTile(X, Y, TILE_WIDTH, TILE_HEIGHT, NAME));
+		TILE.objects[0].y -= TILE.objects[0].height;
+		room.events.push(new EventTile(TILE.objects[0]));
 	}
 
 	joinTiles(room.collisions);
@@ -175,39 +182,52 @@ function createTileObjects(room, jsonData) {
 }
 
 async function createCollisionsInRooms() {
-	for (const KEY of Object.keys(rooms)) {
+	for (const KEY of Object.keys(ROOMS)) {
 		let jsonData;
 
-		await fetch(`./tiled/${rooms[KEY].name}.json`)
+		await fetch(`./tiled/${ROOMS[KEY].name}.json`)
 			.then(response => response.json())
 			.then(json => jsonData = json);
 
-		createTileObjects(rooms[KEY], jsonData);
+		createTileObjects(ROOMS[KEY], jsonData);
 	}
 }
 
 async function startGame() {
-	await fetch(`./data/json/entities.json`)
+	document.getElementById("main-menu").style.display = "none";
+	document.getElementById("game").style.display = "flex";
+
+	await fetch(`./json/entities.json`)
 		.then(response => response.json())
-		.then(json => {
-			player = new Character(json.player);
+		.then(async (json) => {
+			player = new Player(json.player);
+			let imagesToLoad = [player.img];
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
-				npcs[KEY] = new Npc(json[KEY]);
+				NPCS[KEY] = new Npc(json[KEY]);
+				imagesToLoad.push(NPCS[KEY].img);
 			}
+
+			await loadImages(imagesToLoad);
 		});
 	
-	await fetch(`./data/json/rooms.json`)
+	await fetch(`./json/rooms.json`)
 		.then(response => response.json())
-		.then(json => {
-			for (const KEY of Object.keys(json))
-				rooms[KEY] = new Room(json[KEY]);
+		.then(async (json) => {
+			let imagesToLoad = [];
+
+			for (const KEY of Object.keys(json)) {
+				ROOMS[KEY] = new Room(json[KEY]);
+				imagesToLoad.push(ROOMS[KEY].img, ROOMS[KEY].foregroundImg, ROOMS[KEY].roofImg);
+			}
+
+			await loadImages(imagesToLoad);
 		});
 
 	await createCollisionsInRooms();
 	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
 
 	$CANVAS_OVERWORLD.style.display = "flex";
-	changeRoom(player.room, "exitHome");
+	changeRoom(player.room, "playerSpawn");
 }

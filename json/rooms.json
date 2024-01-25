@@ -1,0 +1,24 @@
+{
+	"home": {
+		"name": "home",
+		"src": "./img/room/home/room.png",
+		"foregroundSrc": "./img/room/home/foreground.png",
+		"roofSrc": "./img/room/home/roof.png",
+		"x": 0,
+		"y": 0,
+		"width": 896,
+		"height": 576,
+		"backgroundColor": "#272222"
+	},
+	"forest_home": {
+		"name": "forest-home",
+		"src": "./img/room/forest-home/room.png",
+		"foregroundSrc": "./img/room/forest-home/foreground.png",
+		"roofSrc": "./img/room/forest-home/roof.png",
+		"x": 0,
+		"y": 0,
+		"width": 1600,
+		"height": 1024,
+		"backgroundColor": "#323c39"
+	}
+}
