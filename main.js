@@ -193,10 +193,31 @@ async function createCollisionsInRooms() {
 	}
 }
 
+function setLoadingScreen(extraText = "") {
+	context.fillStyle='black';
+	context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	const takeTextInfo = (text) => {return context.measureText(text);};
+	
+	context.font = "16px PressStart2P";
+	context.fillStyle = "white";
+
+	let loadingText = "Loading.." + extraText;
+	let loadingTextInfo = takeTextInfo(loadingText);
+
+	context.fillText(loadingText, (SCREEN_WIDTH / 2) - (loadingTextInfo.width / 2), SCREEN_HEIGHT / 2);
+}
+
 async function startGame() {
 	document.getElementById("main-menu").style.display = "none";
 	document.getElementById("game").style.display = "flex";
+	
+	setLoadingScreen(" Font");
+	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
 
+	$CANVAS_OVERWORLD.style.display = "flex";
+
+	setLoadingScreen(" Npcs sprites");
 	await fetch(`./json/entities.json`)
 		.then(response => response.json())
 		.then(async (json) => {
@@ -211,7 +232,8 @@ async function startGame() {
 
 			await loadImages(imagesToLoad);
 		});
-	
+
+	setLoadingScreen(" Room images");
 	await fetch(`./json/rooms.json`)
 		.then(response => response.json())
 		.then(async (json) => {
@@ -225,9 +247,8 @@ async function startGame() {
 			await loadImages(imagesToLoad);
 		});
 
+	setLoadingScreen(" Generating collisions");
 	await createCollisionsInRooms();
-	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
 
-	$CANVAS_OVERWORLD.style.display = "flex";
 	changeRoom(player.room, "playerSpawn");
 }
