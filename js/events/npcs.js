@@ -5,7 +5,7 @@ const EVENTS_NPCS = {
 				stopGameUpdate();
 
 				setSpeakers({
-					name: "Placeholder",
+					name: "placeholder",
 					position: 0,
 					clothe: "default"	
 				});
@@ -66,7 +66,7 @@ const EVENTS_NPCS = {
 				stopGameUpdate();
 
 				setSpeakers({
-					name: "Placeholder",
+					name: "placeholder",
 					position: 0,
 					clothe: "default"	
 				});
