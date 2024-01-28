@@ -61,6 +61,12 @@ function keyDown(e) {
 			player.sy = 0;
 			KEY_PRESSED.d = true;
 			break;
+		case "q":
+			stopGameUpdate();
+			
+			document.getElementById("game").style.display = "none";
+			document.getElementById("inventory").style.display = "flex";
+			break;
 		case "shift":
 			KEY_PRESSED.shift = true;
 			break;

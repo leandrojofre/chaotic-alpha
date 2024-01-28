@@ -252,3 +252,5 @@ async function startGame() {
 
 	changeRoom(player.room, "playerSpawn");
 }
+
+window.onload = () => document.getElementById("start-button").onclick = () => startGame();

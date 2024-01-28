@@ -91,8 +91,12 @@ async function changeSpeakerImg(speakerKey) {
 	let speaker = SPEAKERS[speakerKey];
 
 	const $SPEAKER = document.getElementById(`speaker-${speaker.position}`);
-	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
+	
+	if ($SPEAKER.src.includes(`/img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`))
+		return;
 
+	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
+	
 	await loadImages([$SPEAKER]);
 }
 

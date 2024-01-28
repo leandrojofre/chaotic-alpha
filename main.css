@@ -2,6 +2,7 @@
 	--screen-width: 960px;
 	--screen-height: 640px;
 	--animation-width: 512px;
+	--inventory-ui-width: 138px;
 }
 
 @font-face {
@@ -32,6 +33,10 @@ p {
 	font-size: 10px;
 	overflow-wrap: break-word;
 	line-height: 13px;
+}
+
+div{
+		margin: 0px;
 }
 
 .menu {
@@ -75,6 +80,27 @@ p {
 	display: flex;
 	width: 256px;
 	height: 256px;
+}
+
+.stats-window {
+	display: flex;
+	flex-direction: column;
+	background-color: aqua;
+	width: calc(var(--screen-width) - var(--inventory-ui-width));
+
+	& p {
+		word-break: break-word;
+	}
+}
+
+.stats-info {
+	display: flex;
+}
+
+.custom-info {
+	height: 256px;
+	width: -webkit-fill-available;
+	background-color: magenta;
 }
 
 #game {
@@ -145,7 +171,21 @@ p {
 	width: 736px;	
 }
 
-#game, #overworld, #overworld-text-box, #animation-box, #pause-menu, .radio {
+#inventory {
+	display: flex;
+	flex-direction: row;
+	width: var(--screen-width);
+	height: var(--screen-height);
+	gap: 0px;
+}
+
+#inventory-ui {
+	width: var(--inventory-ui-width);
+	height: var(--screen-height);
+	background-color: orange;
+}
+
+#game, #overworld, #overworld-text-box, #animation-box, #pause-menu, #inventory, .radio {
 	display: none;
 }
 

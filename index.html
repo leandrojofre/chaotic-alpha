@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<section id="main-menu" class="menu">
-			<img class="button" src="./img/button-play.png" onclick="startGame()">
+			<img id="start-button" class="button" src="./img/button-play.png">
 		</section>
 
 		<section id="game">
@@ -18,8 +18,8 @@
 
 			<div id="overworld-text-box">
 				<div id="npcs-image-box">
-					<img id="speaker-0" class="speaker" src="img/npc/speak-clothe-default.png">
-					<img id="speaker-1" class="speaker" src="img/npc/speak-clothe-default.png">
+					<img id="speaker-0" class="speaker" src="./img/npc/speak-clothe-default.png">
+					<img id="speaker-1" class="speaker" src="./img/npc/speak-clothe-default.png">
 				</div>
 				<p id="speak-with-npc"></p>
 			</div>
@@ -45,6 +45,50 @@
 				</div>
 
 				<p id="speak-animation"></p>
+			</div>
+		</section>
+
+		<section id="inventory" class="menu">
+			<div id="inventory-ui">
+
+			</div>
+
+			<div id="player-stats" class="stats-window">
+				<div class="stats-info">
+					<img src="./img/npc/player/speak-clothe-default.png" class="speaker">
+					<div>
+						<p id="player-name"></p>
+						<p id="player-bio"></p>
+					</div>
+				</div>
+				<div class="custom-info"></div>
+			</div>
+
+			<div id="items" style="display: none;">
+				<div>
+					<img>
+					<div>
+						<p id="item-name"></p>
+						<p id="item-description"></p>
+					</div>
+					<div id="item-bag"></div>
+				</div>
+
+			</div>
+
+			<div id="npcs" style="display: none;">
+				<div id="npc-list"></div>
+				<div id="npc-stats" class="stats-window">
+					<div class="stats-info">
+						<img src="./img/npc/speak-clothe-default.png" class="speaker">
+						<div>
+							<p id="npc-name"></p>
+							<p id="npc-bio"></p>
+							<!-- <img id="return-button" class="button" src="./img/button-return.png"> -->
+						</div>
+					</div>
+					<div class="custom-info"></div>
+				</div>
 			</div>
 		</section>
 
