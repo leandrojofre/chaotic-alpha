@@ -5,6 +5,10 @@
 	--inventory-ui-width: 138px;
 }
 
+* {
+	gap: 0px;
+}
+
 @font-face {
 	font-family: PressStart2P;
 	src: url(./PressStart2P-Regular.ttf) format("opentype");
@@ -36,7 +40,7 @@ p {
 }
 
 div{
-		margin: 0px;
+	margin: 0px;
 }
 
 .menu {
@@ -85,8 +89,10 @@ div{
 .stats-window {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-evenly;
 	background-color: aqua;
 	width: calc(var(--screen-width) - var(--inventory-ui-width));
+	height: var(--screen-height);
 
 	& p {
 		word-break: break-word;
@@ -95,12 +101,57 @@ div{
 
 .stats-info {
 	display: flex;
+	height: 288px;
+
+	& div {
+		padding: 16px 16px 16px 0px;
+	}
+
+	& img {
+		transform: translateY(16px);
+	}
 }
 
 .custom-info {
 	height: 256px;
 	width: -webkit-fill-available;
 	background-color: magenta;
+}
+
+.has-custom-background {
+	padding: 0px 8px;
+	background-origin: content-box;
+	background-clip: content-box;
+	background-image: 
+		url(./img/pauseMenu/top-left.png),
+		url(./img/pauseMenu/top-right.png),
+		url(./img/pauseMenu/bottom-left.png),
+		url(./img/pauseMenu/bottom-right.png),
+		url(./img/pauseMenu/top.png),
+		url(./img/pauseMenu/left.png),
+		url(./img/pauseMenu/right.png),
+		url(./img/pauseMenu/bottom.png),
+		url(./img/pauseMenu/center.png);
+	background-repeat:
+		no-repeat,
+		no-repeat,
+		no-repeat,
+		no-repeat,
+		repeat-x,
+		repeat-y,
+		repeat-y,
+		repeat-x,
+		repeat;
+	background-position: 
+		top left,
+		top right,
+		bottom left,
+		bottom right,
+		top,
+		left,
+		right,
+		bottom,
+		center;
 }
 
 #game {

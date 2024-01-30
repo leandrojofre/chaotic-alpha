@@ -1,7 +1,7 @@
 const EVENTS_NPCS = {
 	placeholder: [
 		[
-			async () => {
+			async () => { // Level 0, Progression 0
 				stopGameUpdate();
 
 				setSpeakers({
@@ -62,7 +62,7 @@ const EVENTS_NPCS = {
 				NPCS.placeholder.lvlProgression++;
 				startGameUpdate();
 			},
-			async () => {
+			async () => { // Level 0, Progression 1
 				stopGameUpdate();
 
 				setSpeakers({
