@@ -65,6 +65,9 @@ function startPlayerInput() {
 function stopPlayerInput() {
 	window.removeEventListener("keydown", keyDown);
 	window.removeEventListener("keyup", keyUp);
+
+	for (const KEY of Object.keys(KEY_PRESSED))
+		KEY_PRESSED[KEY] = false;
 }
 
 function startGameUpdate() {

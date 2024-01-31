@@ -23,7 +23,7 @@ body {
 	font-family: 'PressStart2P', cursive;
 	margin: 0px;
 	overflow-y: hidden;
-	background-color: #68071c;
+	background-color: #4b2121;
 	user-select: none;
 }
 
@@ -52,15 +52,14 @@ div{
 
 	width: var(--screen-width);
 	height: var(--screen-height);
-	background: #910523;
-	border: 5px solid #910523;
+	background: #ac3232;
+	border: 5px solid #331212;
 }
 
 .button, button {
-	border: 5px solid #68071c;
+	border: 5px solid #331212;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
 }
-
 
 .animation-action {
 	display: flex;
@@ -70,11 +69,11 @@ div{
 	height: 64px;
 	align-items: center;
 	justify-content: center;
-	background-color: #fdd89b;
+	background-color: #e3b898;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
 
 	& img {
-		border: 5px solid #68071c;
+		border: 5px solid #331212;
 		width: 64px;
 		height: 64px;
 	}
@@ -90,12 +89,12 @@ div{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
-	background-color: aqua;
 	width: calc(var(--screen-width) - var(--inventory-ui-width));
 	height: var(--screen-height);
 
 	& p {
 		word-break: break-word;
+		-webkit-text-fill-color: #362121;
 	}
 }
 
@@ -104,7 +103,7 @@ div{
 	height: 288px;
 
 	& div {
-		padding: 16px 16px 16px 0px;
+		padding: 24px 24px 24px 0px;
 	}
 
 	& img {
@@ -115,11 +114,11 @@ div{
 .custom-info {
 	height: 256px;
 	width: -webkit-fill-available;
-	background-color: magenta;
 }
 
 .has-custom-background {
 	padding: 0px 8px;
+	image-rendering: pixelated;
 	background-origin: content-box;
 	background-clip: content-box;
 	background-image: 
@@ -132,6 +131,7 @@ div{
 		url(./img/pauseMenu/right.png),
 		url(./img/pauseMenu/bottom.png),
 		url(./img/pauseMenu/center.png);
+	background-size: 32px;
 	background-repeat:
 		no-repeat,
 		no-repeat,
@@ -155,7 +155,7 @@ div{
 }
 
 #game {
-	border: 5px solid #910523;
+	border: 5px solid #331212;
 	width: var(--screen-width);
 	height: var(--screen-height);
 }
@@ -233,7 +233,7 @@ div{
 #inventory-ui {
 	width: var(--inventory-ui-width);
 	height: var(--screen-height);
-	background-color: orange;
+	background-color: #362121;
 }
 
 #game, #overworld, #overworld-text-box, #animation-box, #pause-menu, #inventory, .radio {
@@ -247,10 +247,11 @@ div{
 ::-webkit-scrollbar-track {
 	background: rgba(0, 0, 0, 0);
 }
+
 ::-webkit-scrollbar-thumb {
-	background: #910523;
+	background: #ac3232;
 	border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: #910523;
+	background: #ac3232;
 }

@@ -225,7 +225,7 @@ function enableRadioButton($radioButton) {
 	$radioButton.disabled = false;
 
 	changeElementStyle($radioButton.labels[0], [
-		["backgroundColor", "#fdd89b"],
+		["backgroundColor", "#e3b898"],
 		["cursor", "url(./img/cursor1.png) 20 20, pointer"]
 	]);
 }
