@@ -202,7 +202,7 @@ async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
 }
 
 function showCheckedButtonActBox() {
-	let arrayRadioButtons = Array.from(document.querySelectorAll(".radio"));
+	let arrayRadioButtons = Array.from(document.getElementsByName("action-button"));
 	let enabledRadioButtons = arrayRadioButtons.filter($radioButton => !$radioButton.disabled);
 
 	for (const $radioButton of enabledRadioButtons) {
@@ -237,7 +237,7 @@ function enableRadioButtons(arrayIDs) {
 		return false;
 	};
 
-	document.querySelectorAll(".radio").forEach($button => {
+	document.getElementsByName("action-button").forEach($button => {
 		if (verifyIDs($button.id)) {
 			enableRadioButton($button);
 		} else {

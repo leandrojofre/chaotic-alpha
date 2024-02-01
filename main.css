@@ -2,7 +2,7 @@
 	--screen-width: 960px;
 	--screen-height: 640px;
 	--animation-width: 512px;
-	--inventory-ui-width: 138px;
+	--inventory-ui-width: 192px;
 }
 
 * {
@@ -57,8 +57,22 @@ div{
 }
 
 .button, button {
+	display: flex;
+	width: 160px;
+	height: 24px;
+	background-color: #e3b898;
 	border: 5px solid #331212;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
+	justify-content: center;
+	align-items: center;
+
+	& p {
+		padding: 0px;
+		font-size: 16px;
+		line-height: 16px;
+		transform: translateY(1px);
+		-webkit-text-fill-color: #331212;
+	}
 }
 
 .animation-action {
@@ -231,9 +245,34 @@ div{
 }
 
 #inventory-ui {
+	display: flex;
 	width: var(--inventory-ui-width);
 	height: var(--screen-height);
 	background-color: #362121;
+	flex-direction: column;
+	align-items: center;
+
+	& .button {
+		height: 24px;
+		margin: 4px 0px;
+		background-color: #724046;
+		border: 5px solid #a37870;
+	}
+
+	& p {
+		-webkit-text-fill-color: #efe8d3;
+	}
+
+	& div {
+		display: flex;
+		height: -webkit-fill-available;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	& .button:hover {
+		background-color: #a37870;
+	}
 }
 
 #game, #overworld, #overworld-text-box, #animation-box, #pause-menu, #inventory, .radio {

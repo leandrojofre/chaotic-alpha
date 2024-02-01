@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<section id="main-menu" class="menu">
-			<img id="start-button" class="button" src="./img/button-play.png">
+			<div id="start-button" class="button"><p>PLAY</p></div>
 		</section>
 
 		<section id="game">
@@ -50,7 +50,18 @@
 
 		<section id="inventory" class="menu">
 			<div id="inventory-ui">
-				<img id="return-button" class="button" src="./img/button-return.png" onclick="resumeGame()">
+
+				<div>
+					<div class="button" onclick="resumeGame()"><p>RETURN</p></div>
+	
+					<input type="radio" name="ui-button" checked="checked" id="stats" class="radio">
+						<label for="stats" class="button"><p>STATS</p></label>
+					</input>
+
+					<input type="radio" name="ui-button" id="objects" class="radio">
+						<label for="objects" class="button"><p>ITEMS</p></label>
+					</input>
+				</div>
 			</div>
 
 			<div id="player-stats" class="stats-window">
@@ -84,7 +95,6 @@
 						<div>
 							<p id="npc-name"></p>
 							<p id="npc-bio"></p>
-							<!-- <img id="return-button" class="button" src="./img/button-return.png"> -->
 						</div>
 					</div>
 					<div class="custom-info has-custom-background"></div>
