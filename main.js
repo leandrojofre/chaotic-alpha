@@ -59,7 +59,7 @@ function gameUpdate() {
 
 function startPlayerInput() {
 	window.addEventListener("keydown", keyDown);
-	window.addEventListener("keyup", keyUp);	
+	window.addEventListener("keyup", keyUp);
 }
 
 function stopPlayerInput() {
@@ -256,4 +256,7 @@ async function startGame() {
 	changeRoom(player.room, "playerSpawn");
 }
 
-window.onload = () => document.getElementById("start-button").onclick = () => startGame();
+window.onload = () => {
+	document.getElementById("start-button").onclick = () => startGame();
+	document.getElementsByName("ui-button").forEach($button => $button.onclick = () => swapUiScreens());
+}

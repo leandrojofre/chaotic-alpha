@@ -50,21 +50,24 @@
 
 		<section id="inventory" class="menu">
 			<div id="inventory-ui">
-
 				<div>
-					<div class="button" onclick="resumeGame()"><p>RETURN</p></div>
+					<div class="button" onclick="resumeGame()"><p>RESUME</p></div>
 	
-					<input type="radio" name="ui-button" checked="checked" id="stats" class="radio">
-						<label for="stats" class="button"><p>STATS</p></label>
+					<input type="radio" name="ui-button" checked id="player-stats-selector" class="radio">
+						<label for="player-stats-selector" class="button"><p>STATS</p></label>
 					</input>
 
-					<input type="radio" name="ui-button" id="objects" class="radio">
-						<label for="objects" class="button"><p>ITEMS</p></label>
+					<input type="radio" name="ui-button" id="items-selector" class="radio">
+						<label for="items-selector" class="button"><p>ITEMS</p></label>
+					</input>
+
+					<input type="radio" name="ui-button" id="npcs-selector" class="radio">
+						<label for="npcs-selector" class="button"><p>NPCS</p></label>
 					</input>
 				</div>
 			</div>
 
-			<div id="player-stats" class="stats-window">
+			<div id="player-stats" class="stats-window" style="display: none;">
 				<div class="stats-info has-custom-background">
 					<img src="./img/npc/player/speak-clothe-default.png" class="speaker">
 					<div>
@@ -89,7 +92,7 @@
 
 			<div id="npcs" style="display: none;">
 				<div id="npc-list"></div>
-				<div id="npc-stats" class="stats-window">
+				<div id="npc-stats" class="stats-window" style="display: none;">
 					<div class="stats-info has-custom-background">
 						<img src="./img/npc/speak-clothe-default.png" class="speaker">
 						<div>

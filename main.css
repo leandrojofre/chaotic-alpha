@@ -239,6 +239,7 @@ div{
 #inventory {
 	display: flex;
 	flex-direction: row;
+	justify-content: flex-start;
 	width: var(--screen-width);
 	height: var(--screen-height);
 	gap: 0px;
@@ -271,7 +272,7 @@ div{
 	}
 
 	& .button:hover {
-		background-color: #a37870;
+		background-color: #362121;
 	}
 }
 

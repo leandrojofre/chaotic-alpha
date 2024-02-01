@@ -8,10 +8,12 @@ function catchEvent() {
 	}
 }
 
-function startEvent(eventTrigger) {
+async function startEvent(eventTrigger) {
 	let eventTriggerName = eventTrigger.name;
 
 	if (eventTrigger.type === "npc") {
+		stopGameUpdate();
+
 		let npc = NPCS[eventTriggerName.toLowerCase()];
 		let npcName = npc.name.toLowerCase();
 
@@ -21,7 +23,8 @@ function startEvent(eventTrigger) {
 		)
 			return console.log("No hay más contenido");;
 
-		return EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression]();
+		await EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression]();
+		return startGameUpdate();
 	}
 
 	if (eventTrigger.type === "changeRoom")
@@ -35,17 +38,42 @@ function startEvent(eventTrigger) {
 	}
 }
 
-function pauseGame() {
-	stopGameUpdate();
-	
-	document.getElementById("game").style.display = "none";
-	document.getElementById("inventory").style.display = "flex";
+function selectUiButton() {
+	let buttonSelected;
 
-	// # Me quede, por falta de sueño, en detectar que boton estaba seleccionado para mostrar su respectiva ventana
-	
-	// Array.from(document.getElementsByName("ui-button")).forEach($button => {
+	for (const $button of Array.from(document.getElementsByName("ui-button"))) {
+		if ($button.checked) {
+			$button.labels[0].style.backgroundColor = "#362121";
+			buttonSelected = $button;
+		} else $button.labels[0].style.backgroundColor = "#724046";
+	}
 
-	// })
+	return buttonSelected;
+}
+
+function swapUiScreens() {
+	let checkedButton = selectUiButton();
+	
+	if (checkedButton.id === "player-stats-selector") {
+		document.getElementById("player-stats").style.display = "flex";
+		document.getElementById("items").style.display = "none";
+		document.getElementById("npcs").style.display = "none";
+		return;
+	}
+
+	if (checkedButton.id === "items-selector") {
+		document.getElementById("player-stats").style.display = "none";
+		document.getElementById("items").style.display = "flex";
+		document.getElementById("npcs").style.display = "none";
+		return;
+	}
+
+	if (checkedButton.id === "npcs-selector") {
+		document.getElementById("player-stats").style.display = "none";
+		document.getElementById("items").style.display = "none";
+		document.getElementById("npcs").style.display = "flex";
+		return;
+	}
 }
 
 function resumeGame() {
@@ -53,6 +81,24 @@ function resumeGame() {
 	document.getElementById("game").style.display = "flex";
 
 	startGameUpdate();
+}
+
+function pauseGame() {
+	stopGameUpdate();
+	
+	document.getElementById("game").style.display = "none";
+	document.getElementById("inventory").style.display = "flex";
+	
+	swapUiScreens();
+
+	let detectResumeKey = (e) => {
+		if (e.key.toLowerCase() === 'q') {
+			resumeGame();
+			window.removeEventListener("keydown", detectResumeKey);
+		}
+	}
+
+	window.addEventListener("keydown", detectResumeKey);
 }
 
 function keyDown(e) {
