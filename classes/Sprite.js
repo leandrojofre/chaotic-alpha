@@ -60,6 +60,7 @@ class Player extends Sprite {
 		});
 		this.name = name;
 		this.room = room;
+		this.inventory = {};
 		this.textColor = textColor;
 		this.textBackground = textBackground;
 		this.Vx = 0;
@@ -88,6 +89,17 @@ Player.prototype.walk = function() {
 	}
 }
 
+Player.prototype.addItem = function(item) {
+	if (thisRoomItems[item.key] !== undefined)
+		delete thisRoomItems[item.key];
+	
+	this.inventory[item.key] = item;
+}
+
+Player.prototype.removeItem = function(item) {
+	delete this.inventory[item.key];
+}
+
 class Npc extends Sprite {
 	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground, lvl, lvlProgression }) {
 		super({ src, x, y, width, height, sy, animate, frameSpeed });
@@ -108,13 +120,13 @@ class Npc extends Sprite {
 				type: "npc",
 				warningName: "talk"
 			}
-		);
-		
+		);		
 	}
 }
 
 Npc.prototype.drawWarning = function() {
-	if (collision(player.hitbox, this.eventBox, "all-still")) this.eventBox.drawWarning(this);
+	if (collision(player.hitbox, this.eventBox, "all-still"))
+		this.eventBox.drawWarning(this);
 }
 
 Npc.prototype.move = function(x, y) {

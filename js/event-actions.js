@@ -17,8 +17,11 @@ function changeRoom(roomName, tileName) {
 		}
 
 	thisRoomNpcs = {};
+	thisRoomItems = {};
 	for (const KEY of Object.keys(NPCS))
 		if (NPCS[KEY].room === player.room) thisRoomNpcs[KEY] = NPCS[KEY];
+	for (const KEY of Object.keys(ITEMS))
+		if (ITEMS[KEY].room === player.room) thisRoomItems[KEY] = ITEMS[KEY];
 
 	let tile = thisRoom.events.find(tile => tile.name === tileName);
 	let offsetX = player.hitbox.x - tile.x - (tile.width / 2 - player.hitbox.width / 2);

@@ -1,11 +1,14 @@
 function catchEvent() {
-	for(const NPC of Object.keys(thisRoomNpcs))
+	for (const NPC of Object.keys(thisRoomNpcs))
 		if (collision(player.hitbox, thisRoomNpcs[NPC].eventBox, "all-still")) return thisRoomNpcs[NPC].eventBox;
 
-	for(const TILE of thisRoom.events) {
+	for (const TILE of thisRoom.events) {
 		if (TILE.customProperties.hide) break;
 		if (collision(player.hitbox, TILE, "all-still")) return TILE;
 	}
+
+	for (const ITEM of Object.keys(thisRoomItems))
+		if (collision(player.hitbox, thisRoomItems[ITEM].eventBox, "all-still")) return thisRoomItems[ITEM].eventBox;
 }
 
 async function startEvent(eventTrigger) {
@@ -35,6 +38,10 @@ async function startEvent(eventTrigger) {
 
 	if (eventTrigger.type === "room") {
 		return EVENTS_ROOMS[eventTriggerName]();
+	}
+	
+	if (eventTrigger.type === "item") {
+		return ITEMS[eventTrigger.name].sendToInventory();
 	}
 }
 

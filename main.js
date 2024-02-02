@@ -27,10 +27,17 @@ function moveObjects(x, y) {
 	
 	for (const KEY of Object.keys(thisRoomNpcs))
 		thisRoomNpcs[KEY].move(x, y);
+	for (const KEY of Object.keys(thisRoomItems))
+		thisRoomItems[KEY].move(x, y);
 }
 
 function drawObjects() {
 	thisRoom.draw();
+
+	for (const KEY of Object.keys(thisRoomItems)){
+		thisRoomItems[KEY].draw();
+		thisRoomItems[KEY].drawWarning();
+	}
 
 	let drawables = [player];
 	for (const KEY of Object.keys(thisRoomNpcs)) {
@@ -221,9 +228,9 @@ async function startGame() {
 	$CANVAS_OVERWORLD.style.display = "flex";
 
 	setLoadingScreen(" Npcs sprites");
-	await fetch(`./json/entities.json`)
+	await fetch("./json/entities.json")
 		.then(response => response.json())
-		.then(async (json) => {
+		.then(async(json) => {
 			player = new Player(json.player);
 			let imagesToLoad = [player.img];
 
@@ -237,9 +244,9 @@ async function startGame() {
 		});
 
 	setLoadingScreen(" Room images");
-	await fetch(`./json/rooms.json`)
+	await fetch("./json/rooms.json")
 		.then(response => response.json())
-		.then(async (json) => {
+		.then(async(json) => {
 			let imagesToLoad = [];
 
 			for (const KEY of Object.keys(json)) {
@@ -249,6 +256,22 @@ async function startGame() {
 
 			await loadImages(imagesToLoad);
 		});
+
+	setLoadingScreen(" Items sprites");
+	await fetch("./json/items.json")
+		.then(response => response.json())
+		.then(async(json) => {
+			let imagesToLoad = [];
+
+			for (const KEY of Object.keys(json)) {
+				json[KEY].src = `./img/item/${KEY}.png`;
+				json[KEY].key = KEY;
+				ITEMS[KEY] = new Item(json[KEY]);
+				imagesToLoad.push(ITEMS[KEY].img);
+			}
+
+			await loadImages(imagesToLoad);
+		})
 
 	setLoadingScreen(" Generating collisions");
 	await createCollisionsInRooms();
