@@ -58,6 +58,7 @@ const EVENTS_NPCS = {
 					"placeholder/ Enjoy your day and try to not die!"
 				])
 
+				ITEMS.core_of_chaos.sendToInventory();
 				NPCS.placeholder.lvlProgression++;
 			},
 			async () => { // Level 0, Progression 1

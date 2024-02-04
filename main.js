@@ -33,19 +33,16 @@ function moveObjects(x, y) {
 
 function drawObjects() {
 	thisRoom.draw();
-
-	for (const KEY of Object.keys(thisRoomItems)){
-		thisRoomItems[KEY].draw();
-		thisRoomItems[KEY].drawWarning();
-	}
-
 	let drawables = [player];
-	for (const KEY of Object.keys(thisRoomNpcs)) {
-		drawables.push(thisRoomNpcs[KEY]);
-		thisRoomNpcs[KEY].drawWarning();
-	}
 
-	if (thisRoom.foregrounds[0] !== undefined) drawables.push(...thisRoom.foregrounds);
+	for (const KEY of Object.keys(thisRoomItems))
+		drawables.push(thisRoomItems[KEY]);
+
+	for (const KEY of Object.keys(thisRoomNpcs))
+		drawables.push(thisRoomNpcs[KEY]);
+
+	if (thisRoom.foregrounds[0] !== undefined)
+		drawables.push(...thisRoom.foregrounds);
 
 	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
@@ -227,7 +224,7 @@ async function startGame() {
 
 	$CANVAS_OVERWORLD.style.display = "flex";
 
-	setLoadingScreen(" Npcs sprites");
+	setLoadingScreen(" Npcs");
 	await fetch("./json/entities.json")
 		.then(response => response.json())
 		.then(async(json) => {
@@ -243,7 +240,7 @@ async function startGame() {
 			await loadImages(imagesToLoad);
 		});
 
-	setLoadingScreen(" Room images");
+	setLoadingScreen(" Room");
 	await fetch("./json/rooms.json")
 		.then(response => response.json())
 		.then(async(json) => {
@@ -257,7 +254,10 @@ async function startGame() {
 			await loadImages(imagesToLoad);
 		});
 
-	setLoadingScreen(" Items sprites");
+	setLoadingScreen(" Generating collisions");
+	await createCollisionsInRooms();
+
+	setLoadingScreen(" Items");
 	await fetch("./json/items.json")
 		.then(response => response.json())
 		.then(async(json) => {
@@ -268,13 +268,13 @@ async function startGame() {
 				json[KEY].key = KEY;
 				ITEMS[KEY] = new Item(json[KEY]);
 				imagesToLoad.push(ITEMS[KEY].img);
+
+				if (ITEMS[KEY].room === "inventory")
+					ITEMS[KEY].sendToInventory();
 			}
 
 			await loadImages(imagesToLoad);
 		})
-
-	setLoadingScreen(" Generating collisions");
-	await createCollisionsInRooms();
 
 	changeRoom(player.room, "playerSpawn");
 }

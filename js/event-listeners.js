@@ -58,24 +58,59 @@ function selectUiButton() {
 	return buttonSelected;
 }
 
+function fillItemsInfo() {
+	const $itemsInfo = document.getElementById("items-info");
+	const itemBag = Array.from(document.getElementsByName("items-info-selector"));
+	const selectedItem = ITEMS[itemBag.find(item => item.checked).id];
+
+	if (document.getElementById("item-name").innerText === selectedItem.name) return;
+
+	$itemsInfo.innerHTML = `
+		<img id="item-display-img" src="${selectedItem.img.src}">
+		<div>
+			<p id="item-name">${selectedItem.name}</p>
+			<p id="item-description">${selectedItem.description}</p>
+		</div>
+	`;
+}
+
 function swapUiScreens() {
 	let checkedButton = selectUiButton();
+	let buttonName = checkedButton.parentElement.innerText;
 	
-	if (checkedButton.id === "player-stats-selector") {
+	if (buttonName === "STATS") {
+		document.getElementById("player-name").innerText = player.name;
+
 		document.getElementById("player-stats").style.display = "flex";
 		document.getElementById("items").style.display = "none";
 		document.getElementById("npcs").style.display = "none";
 		return;
 	}
 
-	if (checkedButton.id === "items-selector") {
+	if (buttonName === "ITEMS") {
+		let itemWindow = function(item) {
+			return `
+				<label class="unstyled-button">
+					<input type="radio" name="items-info-selector" id="${item.key}" class="radio" onclick="fillItemsInfo()"></input>
+					<img src='${item.img.src}'>
+				</label>
+			`;
+		}
+		
+		document.getElementById("item-bag").innerHTML = "";
+
+		for(const itemKey of Object.keys(player.inventory)) {
+			const item = player.inventory[itemKey];
+			document.getElementById("item-bag").innerHTML += itemWindow(item);
+		}
+
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "flex";
 		document.getElementById("npcs").style.display = "none";
 		return;
 	}
 
-	if (checkedButton.id === "npcs-selector") {
+	if (buttonName === "NPCS") {
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "none";
 		document.getElementById("npcs").style.display = "flex";
@@ -83,28 +118,24 @@ function swapUiScreens() {
 	}
 }
 
+function detectResumeKey(e) {
+	if (e.key.toLowerCase() === 'q') resumeGame();
+}
+
 function resumeGame() {
 	document.getElementById("inventory").style.display = "none";
 	document.getElementById("game").style.display = "flex";
+	window.removeEventListener("keydown", detectResumeKey);
 
 	startGameUpdate();
 }
 
 function pauseGame() {
 	stopGameUpdate();
-	
 	document.getElementById("game").style.display = "none";
 	document.getElementById("inventory").style.display = "flex";
-	
+
 	swapUiScreens();
-
-	let detectResumeKey = (e) => {
-		if (e.key.toLowerCase() === 'q') {
-			resumeGame();
-			window.removeEventListener("keydown", detectResumeKey);
-		}
-	}
-
 	window.addEventListener("keydown", detectResumeKey);
 }
 

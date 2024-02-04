@@ -1,11 +1,18 @@
 {
 	"core_of_chaos": {
 		"name": "Core of Chaos",
+		"description": "The root of universal disasters",
+		"room": "void",
+		"x": 0,
+		"y": 0,
+		"sx": 0
+	},
+	"mug": {
+		"name": "Mug",
+		"description": "Literally, a mug",
 		"room": "home",
-		"x": 544,
-		"y": 480,
-		"width": 32,
-		"height": 32,
+		"x": 352,
+		"y": 257,
 		"sx": 0
 	}
 }

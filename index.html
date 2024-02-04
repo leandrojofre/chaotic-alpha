@@ -53,17 +53,20 @@
 				<div>
 					<div class="button" onclick="resumeGame()"><p>RESUME</p></div>
 	
-					<input type="radio" name="ui-button" checked id="player-stats-selector" class="radio">
-						<label for="player-stats-selector" class="button"><p>STATS</p></label>
-					</input>
+					<label class="button">
+						<p>STATS</p>
+						<input type="radio" name="ui-button" checked class="radio"></input>
+					</label>
 
-					<input type="radio" name="ui-button" id="items-selector" class="radio">
-						<label for="items-selector" class="button"><p>ITEMS</p></label>
-					</input>
-
-					<input type="radio" name="ui-button" id="npcs-selector" class="radio">
-						<label for="npcs-selector" class="button"><p>NPCS</p></label>
-					</input>
+					<label class="button">
+						<p>ITEMS</p>
+						<input type="radio" name="ui-button" class="radio"></input>
+					</label>
+					
+					<label class="button">
+						<p>NPCS</p>
+						<input type="radio" name="ui-button" class="radio"></input>
+					</label>
 				</div>
 			</div>
 
@@ -79,15 +82,16 @@
 			</div>
 
 			<div id="items" style="display: none;">
-				<div>
-					<img>
+				<div id="items-info" class="has-custom-background">
+					<img src="./img/item/none.png" id="item-display-img">
 					<div>
-						<p id="item-name"></p>
+						<p id="item-name">Nothing selected</p>
 						<p id="item-description"></p>
 					</div>
+				</div>
+				<div class="has-custom-background">
 					<div id="item-bag"></div>
 				</div>
-
 			</div>
 
 			<div id="npcs" style="display: none;">

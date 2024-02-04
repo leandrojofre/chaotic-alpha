@@ -37,6 +37,8 @@ Sprite.prototype.draw = function() {
 		this.height
 	);
 
+	if (this.drawWarning) this.drawWarning();
+
 	if (!this.animate) return;
 	if (!(animationID % this.frameSpeed === 0)) return;
 
@@ -47,7 +49,18 @@ Sprite.prototype.draw = function() {
 	this.sx = this.frameRate * (this.sWidth);
 }
 
-class Player extends Sprite {
+class Character extends Sprite {
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground }) {
+		super({ src, x, y, width, height, sy, animate, frameSpeed });
+		this.name = name;
+		this.room = room;
+		this.textColor = textColor;
+		this.textBackground = textBackground;
+		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
+	}
+}
+
+class Player extends Character {
 	constructor({ src, width, height, sy, frameSpeed, name, room, textColor, textBackground }) {
 		super({
 			src,
@@ -56,17 +69,16 @@ class Player extends Sprite {
 			width,
 			height,
 			sy,
-			frameSpeed
+			frameSpeed,
+			name,
+			room,
+			textColor,
+			textBackground
 		});
-		this.name = name;
-		this.room = room;
 		this.inventory = {};
-		this.textColor = textColor;
-		this.textBackground = textBackground;
 		this.Vx = 0;
 		this.Vy = 0;
 		this.acceleration = 1;
-		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
 	}
 }
 
@@ -100,16 +112,11 @@ Player.prototype.removeItem = function(item) {
 	delete this.inventory[item.key];
 }
 
-class Npc extends Sprite {
+class Npc extends Character {
 	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground, lvl, lvlProgression }) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed });
-		this.name = name;
-		this.room = room;
-		this.textColor = textColor;
-		this.textBackground = textBackground;
+		super({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground });
 		this.lvl = lvl;
 		this.lvlProgression = lvlProgression;
-		this.hitbox = new Hitbox(x + width / 4, y + height - width / 2, width / 2, width / 2);
 		this.eventBox = new EventTile(
 			{
 				x: this.hitbox.x - WIDTH,
