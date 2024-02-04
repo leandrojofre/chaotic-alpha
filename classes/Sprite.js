@@ -50,8 +50,24 @@ Sprite.prototype.draw = function() {
 }
 
 class Character extends Sprite {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground }) {
+	constructor({
+		src,
+		speakingClothesSrc = "./img/npc/speak-clothe-default.png",
+		x,
+		y,
+		width,
+		height,
+		sy,
+		animate,
+		frameSpeed,
+		name,
+		bio,
+		room,
+		textColor,
+		textBackground
+	}) {
 		super({ src, x, y, width, height, sy, animate, frameSpeed });
+		this.speakingClothesSrc = speakingClothesSrc;
 		this.name = name;
 		this.bio = bio;
 		this.room = room;
@@ -62,9 +78,10 @@ class Character extends Sprite {
 }
 
 class Player extends Character {
-	constructor({ src, width, height, sy, frameSpeed, name, bio, room, textColor, textBackground }) {
+	constructor({ src, speakingClothesSrc, width, height, sy, frameSpeed, name, bio, room, textColor, textBackground }) {
 		super({
 			src,
+			speakingClothesSrc,
 			x: SCREEN_WIDTH / 2 - width / 2,
 			y: SCREEN_HEIGHT / 2 - height / 2,
 			width,
@@ -115,8 +132,8 @@ Player.prototype.removeItem = function(item) {
 }
 
 class Npc extends Character {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground, lvl, lvlProgression }) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground });
+	constructor({ src, speakingClothesSrc, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground, lvl, lvlProgression }) {
+		super({ src, speakingClothesSrc, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground });
 		this.lvl = lvl;
 		this.lvlProgression = lvlProgression;
 		this.eventBox = new EventTile(

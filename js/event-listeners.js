@@ -86,7 +86,7 @@ function fillNpcsInfo() {
 		$npcInfo.innerHTML = `
 			<div id="npc-stats-back-button" class="button"><p>BACK</p></div>
 			<div class="stats-info has-custom-background">
-				<img src="./img/npc/${selectedNpc.key}/speak-clothe-default.png" class="speaker">
+				<img src="${selectedNpc.speakingClothesSrc}" class="speaker">
 				<div>
 					<p id="npc-name">${selectedNpc.name}</p>
 					<p id="npc-bio">${selectedNpc.bio}</p>
