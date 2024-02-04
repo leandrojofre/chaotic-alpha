@@ -50,9 +50,10 @@ Sprite.prototype.draw = function() {
 }
 
 class Character extends Sprite {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground }) {
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground }) {
 		super({ src, x, y, width, height, sy, animate, frameSpeed });
 		this.name = name;
+		this.bio = bio;
 		this.room = room;
 		this.textColor = textColor;
 		this.textBackground = textBackground;
@@ -61,7 +62,7 @@ class Character extends Sprite {
 }
 
 class Player extends Character {
-	constructor({ src, width, height, sy, frameSpeed, name, room, textColor, textBackground }) {
+	constructor({ src, width, height, sy, frameSpeed, name, bio, room, textColor, textBackground }) {
 		super({
 			src,
 			x: SCREEN_WIDTH / 2 - width / 2,
@@ -71,6 +72,7 @@ class Player extends Character {
 			sy,
 			frameSpeed,
 			name,
+			bio,
 			room,
 			textColor,
 			textBackground
@@ -113,8 +115,8 @@ Player.prototype.removeItem = function(item) {
 }
 
 class Npc extends Character {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground, lvl, lvlProgression }) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground });
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground, lvl, lvlProgression }) {
+		super({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground });
 		this.lvl = lvl;
 		this.lvlProgression = lvlProgression;
 		this.eventBox = new EventTile(

@@ -24,7 +24,7 @@ async function startEvent(eventTrigger) {
 			EVENTS_NPCS[npcName][npc.lvl] === undefined ||
 			EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression] === undefined
 		)
-			return console.log("No hay más contenido");;
+			return console.log("No hay más contenido");
 
 		await EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression]();
 		return startGameUpdate();
@@ -74,12 +74,41 @@ function fillItemsInfo() {
 	`;
 }
 
+function fillNpcsInfo() {
+	document.getElementById("npc-list").parentNode.style.display = "none";
+	const $npcInfo = document.getElementById("npc-stats");
+	const npcList = Array.from(document.getElementsByName("npcs-info-selector"));
+	const selectedNpc = NPCS[npcList.find(npc => npc.checked).id];
+
+	$npcInfo.style.display = "flex";
+
+	if (document.getElementById("npc-bio")?.innerText !== selectedNpc.bio) {
+		$npcInfo.innerHTML = `
+			<div id="npc-stats-back-button" class="button"><p>BACK</p></div>
+			<div class="stats-info has-custom-background">
+				<img src="./img/npc/${selectedNpc.key}/speak-clothe-default.png" class="speaker">
+				<div>
+					<p id="npc-name">${selectedNpc.name}</p>
+					<p id="npc-bio">${selectedNpc.bio}</p>
+				</div>
+			</div>
+			<div id="custom-info-npc" class="custom-info has-custom-background"></div>
+		`;
+	}
+
+	document.getElementById("npc-stats-back-button").addEventListener("click", () => {
+		document.getElementById("npc-list").parentNode.style.display = "flex";
+		$npcInfo.style.display = "none";
+	}, {once: true});
+}
+
 function swapUiScreens() {
 	let checkedButton = selectUiButton();
 	let buttonName = checkedButton.parentElement.innerText;
 	
 	if (buttonName === "STATS") {
 		document.getElementById("player-name").innerText = player.name;
+		document.getElementById("player-bio").innerText = player.bio;
 
 		document.getElementById("player-stats").style.display = "flex";
 		document.getElementById("items").style.display = "none";
@@ -87,22 +116,26 @@ function swapUiScreens() {
 		return;
 	}
 
-	if (buttonName === "ITEMS") {
-		let itemWindow = function(item) {
-			return `
-				<label class="unstyled-button">
-					<input type="radio" name="items-info-selector" id="${item.key}" class="radio" onclick="fillItemsInfo()"></input>
-					<img src='${item.img.src}'>
-				</label>
-			`;
-		}
-		
-		document.getElementById("item-bag").innerHTML = "";
+	let createInfoSelector = function(obj, radioName, callBackName) {
+		return `
+			<label class="unstyled-button">
+				<input type="radio" name="${radioName}-info-selector" id="${obj.key}" class="radio" onclick="${callBackName}()"></input>
+				<img src='${obj.img.src}'>
+			</label>
+		`;
+	}
 
-		for(const itemKey of Object.keys(player.inventory)) {
-			const item = player.inventory[itemKey];
-			document.getElementById("item-bag").innerHTML += itemWindow(item);
+	let createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackName) {
+		document.getElementById(windowID).innerHTML = "";
+
+		for(const key of Object.keys(elementsToDisplay)) {
+			const obj = elementsToDisplay[key];
+			document.getElementById(windowID).innerHTML += createInfoSelector(obj, radioName, callBackName);
 		}
+	}
+
+	if (buttonName === "ITEMS") {
+		createSelectionWindow("item-bag", player.inventory, "items", "fillItemsInfo");
 
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "flex";
@@ -111,6 +144,8 @@ function swapUiScreens() {
 	}
 
 	if (buttonName === "NPCS") {
+		createSelectionWindow("npc-list", NPCS, "npcs", "fillNpcsInfo");
+
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "none";
 		document.getElementById("npcs").style.display = "flex";

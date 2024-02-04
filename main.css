@@ -3,6 +3,7 @@
 	--screen-height: 640px;
 	--animation-width: 512px;
 	--inventory-ui-width: 192px;
+	--sprite-width: 160px;
 }
 
 * {
@@ -125,7 +126,7 @@ div{
 	}
 
 	& img {
-		transform: translateY(16px);
+		align-self: center;
 	}
 }
 
@@ -298,6 +299,12 @@ div{
 		& div {
 			padding: 24px;
 		}
+
+		#item-bag {
+			& img {
+				width: 64px;
+			}
+		}
 	}
 
 	#items-info {
@@ -328,9 +335,57 @@ div{
 	}
 }
 
-#item-bag {
-	& img {
-		width: 64px;
+#npcs {
+	width: calc(var(--screen-width) - var(--inventory-ui-width));
+	height: calc(var(--screen-height));
+	
+	& div {
+		padding: 8px;
+		width: -webkit-fill-available;
+		height: -webkit-fill-available;
+	}
+
+	#npc-list {
+		display: flex;
+		padding: 24px;
+
+		& label {
+			display: block;
+			overflow: hidden;
+			width: calc((var(--sprite-width) * 2) / 5);
+			height: calc((var(--sprite-width) * 2) / 2.5);
+
+			& img {
+				width: calc(var(--sprite-width) * 2);
+				transform: translateY(-1px);
+			}
+		}
+	}
+
+	#npc-stats {
+		padding: 0px 8px;
+
+		& div {
+			padding: 0px;
+			height: 288px;
+
+			& div {
+				height: -webkit-fill-available;
+				width: auto;
+				padding: 24px 24px 24px 0px;
+			}
+		}
+
+		.custom-info {
+			height: 256px;
+		}
+
+		.button {
+			width: 128px;
+			height: 16px;
+
+			& p {font-size: 12px;}
+		}
 	}
 }
 

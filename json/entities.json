@@ -2,6 +2,7 @@
 	"player": {
 		"src": "./img/npc/player/overworld.png",
 		"name": "Kofe",
+		"bio": "The vessel of chaos",
 		"room": "home",
 		"width": 32,
 		"height": 64,
@@ -13,6 +14,7 @@
 	"placeholder": {
 		"src": "./img/npc/placeholder/overworld.png",
 		"name": "Placeholder",
+		"bio": "Omnipotent entity",
 		"room": "home",
 		"x": 224,
 		"y": 288,
