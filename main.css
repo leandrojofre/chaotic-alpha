@@ -2,6 +2,12 @@
 	--screen-width: 960px;
 	--screen-height: 640px;
 	--animation-width: 512px;
+	--inventory-ui-width: 192px;
+	--sprite-width: 160px;
+}
+
+* {
+	gap: 0px;
 }
 
 @font-face {
@@ -18,7 +24,7 @@ body {
 	font-family: 'PressStart2P', cursive;
 	margin: 0px;
 	overflow-y: hidden;
-	background-color: #68071c;
+	background-color: #4b2121;
 	user-select: none;
 }
 
@@ -34,6 +40,10 @@ p {
 	line-height: 13px;
 }
 
+div{
+	margin: 0px;
+}
+
 .menu {
 	display: flex;
 	flex-direction: column;
@@ -43,15 +53,32 @@ p {
 
 	width: var(--screen-width);
 	height: var(--screen-height);
-	background: #910523;
-	border: 5px solid #910523;
+	background: #ac3232;
+	border: 5px solid #331212;
 }
 
 .button, button {
-	border: 5px solid #68071c;
+	display: flex;
+	width: 160px;
+	height: 24px;
+	background-color: #e3b898;
+	border: 5px solid #331212;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
+	justify-content: center;
+	align-items: center;
+
+	& p {
+		padding: 0px;
+		font-size: 16px;
+		line-height: 16px;
+		transform: translateY(1px);
+		-webkit-text-fill-color: #331212;
+	}
 }
 
+.unstyled-button {
+	cursor: url(./img/cursor1.png) 20 20, pointer;
+}
 
 .animation-action {
 	display: flex;
@@ -61,11 +88,11 @@ p {
 	height: 64px;
 	align-items: center;
 	justify-content: center;
-	background-color: #fdd89b;
+	background-color: #e3b898;
 	cursor: url(./img/cursor1.png) 20 20, pointer;
 
 	& img {
-		border: 5px solid #68071c;
+		border: 5px solid #331212;
 		width: 64px;
 		height: 64px;
 	}
@@ -77,8 +104,79 @@ p {
 	height: 256px;
 }
 
+.stats-window {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	width: calc(var(--screen-width) - var(--inventory-ui-width));
+	height: var(--screen-height);
+
+	& p {
+		word-break: break-word;
+		-webkit-text-fill-color: #362121;
+	}
+}
+
+.stats-info {
+	display: flex;
+	height: 288px;
+
+	& div {
+		padding: 24px 24px 24px 0px;
+	}
+
+	& img {
+		align-self: center;
+	}
+}
+
+.custom-info {
+	height: 256px;
+	width: -webkit-fill-available;
+}
+
+.has-custom-background {
+	padding: 0px 8px;
+	min-width: 96px;
+	min-height: 96px;
+	image-rendering: pixelated;
+	background-origin: content-box;
+	background-clip: content-box;
+	background-image: 
+		url(./img/pauseMenu/top-left.png),
+		url(./img/pauseMenu/top-right.png),
+		url(./img/pauseMenu/bottom-left.png),
+		url(./img/pauseMenu/bottom-right.png),
+		url(./img/pauseMenu/top.png),
+		url(./img/pauseMenu/left.png),
+		url(./img/pauseMenu/right.png),
+		url(./img/pauseMenu/bottom.png),
+		url(./img/pauseMenu/center.png);
+	background-size: 32px;
+	background-repeat:
+		no-repeat,
+		no-repeat,
+		no-repeat,
+		no-repeat,
+		repeat-x,
+		repeat-y,
+		repeat-y,
+		repeat-x,
+		repeat;
+	background-position: 
+		top left,
+		top right,
+		bottom left,
+		bottom right,
+		top,
+		left,
+		right,
+		bottom,
+		center;
+}
+
 #game {
-	border: 5px solid #910523;
+	border: 5px solid #331212;
 	width: var(--screen-width);
 	height: var(--screen-height);
 }
@@ -135,8 +233,10 @@ p {
 #action-buttons {
 	display: none;
 	width: 512px;
+	height: 78px;
 	flex-direction: row;
 	justify-content: space-evenly;
+	align-items: center;
 }
 
 #speak-animation {
@@ -145,7 +245,151 @@ p {
 	width: 736px;	
 }
 
-#game, #overworld, #overworld-text-box, #animation-box, #pause-menu, .radio {
+#inventory {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	width: var(--screen-width);
+	height: var(--screen-height);
+	gap: 0px;
+}
+
+#inventory-ui {
+	display: flex;
+	width: var(--inventory-ui-width);
+	height: var(--screen-height);
+	background-color: #362121;
+	flex-direction: column;
+	align-items: center;
+
+	& .button {
+		height: 24px;
+		margin: 4px 0px;
+		background-color: #724046;
+		border: 5px solid #a37870;
+	}
+
+	& .button:hover {
+		background-color: #362121;
+	}
+
+	& p {
+		-webkit-text-fill-color: #efe8d3;
+	}
+
+	& div {
+		display: flex;
+		height: -webkit-fill-available;
+		flex-direction: column;
+		justify-content: center;
+	}
+}
+
+#items {
+	display: flex;
+	flex-direction: column;
+	padding: 8px 0px;
+	gap: 8px;
+	width: calc(var(--screen-width) - var(--inventory-ui-width));
+	height: calc(var(--screen-height) - 8px * 2);
+
+	& div {
+		height: -webkit-fill-available;
+
+		& div {
+			padding: 24px;
+		}
+
+		#item-bag {
+			& img {
+				width: 64px;
+			}
+		}
+	}
+
+	#items-info {
+		display: flex;
+		height: 160px;
+
+		& img {
+			align-self: center;
+			width: 64px;
+			height: 64px;
+			padding: 0px 5px 0px 24px;
+		}
+		
+		& div {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			padding: 24px 24px 24px 0px;
+			height: auto;
+		}
+
+		& p {
+		    word-break: break-word;
+		    font-size: 8px;
+		    line-height: 4px;
+		    -webkit-text-fill-color: #362121;
+		}
+	}
+}
+
+#npcs {
+	width: calc(var(--screen-width) - var(--inventory-ui-width));
+	height: calc(var(--screen-height));
+	
+	& div {
+		padding: 8px;
+		width: -webkit-fill-available;
+		height: -webkit-fill-available;
+	}
+
+	#npc-list {
+		display: flex;
+		padding: 24px;
+
+		& label {
+			display: block;
+			overflow: hidden;
+			width: calc((var(--sprite-width) * 2) / 5);
+			height: calc((var(--sprite-width) * 2) / 2.5);
+
+			& img {
+				width: calc(var(--sprite-width) * 2);
+				transform: translateY(-1px);
+			}
+		}
+	}
+
+	#npc-stats {
+		padding: 0px 8px;
+
+		& div {
+			padding: 0px;
+			height: 288px;
+
+			& div {
+				height: -webkit-fill-available;
+				width: auto;
+				padding: 24px 24px 24px 0px;
+			}
+		}
+
+		.custom-info {
+			height: 256px;
+		}
+
+		.button {
+			width: 128px;
+			height: 16px;
+
+			& p {font-size: 12px;}
+		}
+	}
+}
+
+#game, #overworld, #overworld-text-box, #animation-box, #pause-menu, #inventory, .radio {
 	display: none;
 }
 
@@ -156,10 +400,11 @@ p {
 ::-webkit-scrollbar-track {
 	background: rgba(0, 0, 0, 0);
 }
+
 ::-webkit-scrollbar-thumb {
-	background: #910523;
+	background: #ac3232;
 	border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: #910523;
+	background: #ac3232;
 }

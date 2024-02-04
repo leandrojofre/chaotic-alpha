@@ -17,38 +17,52 @@ class Sprite {
 		this.frameEnd = 5;
 		this.img.onload = () => this.frameEnd = this.img.width / this.sWidth;
 	}
+}
 
-	draw() {
-		context.imageSmoothingEnabled = false;
+Sprite.prototype.draw = function() {
+	context.imageSmoothingEnabled = false;
 
-		// this.eventBox?.drawColor("rgba(0, 255, 0, 0.3)");
-		// this.hitbox?.drawColor("rgba(255, 0, 0, 0.3)");
-	
-		context.drawImage(
-			this.img,
-			this.sx,
-			this.sy,
-			this.sWidth,
-			this.sHeight,
-			this.x,
-			this.y,
-			this.width,
-			this.height
-		);
-	
-		if (!this.animate) return;
-		if (!(animationID % this.frameSpeed === 0)) return;
-	
-		this.frameRate++;
-		if (this.frameRate >= this.frameEnd)
-			this.frameRate = this.frameStart;
-	
-		this.sx = this.frameRate * (this.sWidth);
+	// this.eventBox?.drawColor("rgba(0, 255, 0, 0.3)");
+	// this.hitbox?.drawColor("rgba(255, 0, 0, 0.3)");
+
+	context.drawImage(
+		this.img,
+		this.sx,
+		this.sy,
+		this.sWidth,
+		this.sHeight,
+		this.x,
+		this.y,
+		this.width,
+		this.height
+	);
+
+	if (this.drawWarning) this.drawWarning();
+
+	if (!this.animate) return;
+	if (!(animationID % this.frameSpeed === 0)) return;
+
+	this.frameRate++;
+	if (this.frameRate >= this.frameEnd)
+		this.frameRate = this.frameStart;
+
+	this.sx = this.frameRate * (this.sWidth);
+}
+
+class Character extends Sprite {
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground }) {
+		super({ src, x, y, width, height, sy, animate, frameSpeed });
+		this.name = name;
+		this.bio = bio;
+		this.room = room;
+		this.textColor = textColor;
+		this.textBackground = textBackground;
+		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
 	}
 }
 
-class Player extends Sprite {
-	constructor({ src, width, height, sy, frameSpeed, name, room, textColor, textBackground }) {
+class Player extends Character {
+	constructor({ src, width, height, sy, frameSpeed, name, bio, room, textColor, textBackground }) {
 		super({
 			src,
 			x: SCREEN_WIDTH / 2 - width / 2,
@@ -56,48 +70,55 @@ class Player extends Sprite {
 			width,
 			height,
 			sy,
-			frameSpeed
+			frameSpeed,
+			name,
+			bio,
+			room,
+			textColor,
+			textBackground
 		});
-		this.name = name;
-		this.room = room;
-		this.textColor = textColor;
-		this.textBackground = textBackground;
+		this.inventory = {};
 		this.Vx = 0;
 		this.Vy = 0;
 		this.acceleration = 1;
-		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
-	}
-
-	walk() {
-		this.hitbox.Vx = this.Vx;
-		this.hitbox.Vy = this.Vy;
-
-		KEY_PRESSED.shift ?
-			(this.acceleration = 2, this.hitbox.acceleration = 2) :
-			(this.acceleration = 1, this.hitbox.acceleration = 1);
-
-		if ((KEY_PRESSED.w || KEY_PRESSED.s) && !this.hitbox.collided('y'))
-			moveObjects(0, this.Vy * this.acceleration);
-		if ((KEY_PRESSED.a || KEY_PRESSED.d) && !this.hitbox.collided('x'))
-			moveObjects(this.Vx * this.acceleration, 0);
-		
-		if (!KEY_PRESSED.a && !KEY_PRESSED.d && !KEY_PRESSED.w && !KEY_PRESSED.s) {
-			this.animate = false;
-			this.sx = 0;
-		}
 	}
 }
 
-class Npc extends Sprite {
-	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, room, textColor, textBackground, lvl, lvlProgression }) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed });
-		this.name = name;
-		this.room = room;
-		this.textColor = textColor;
-		this.textBackground = textBackground;
+Player.prototype.walk = function() {
+	this.hitbox.Vx = this.Vx;
+	this.hitbox.Vy = this.Vy;
+
+	KEY_PRESSED.shift ?
+		(this.acceleration = 2, this.hitbox.acceleration = 2) :
+		(this.acceleration = 1, this.hitbox.acceleration = 1);
+
+	if ((KEY_PRESSED.w || KEY_PRESSED.s) && !this.hitbox.collided('y'))
+		moveObjects(0, this.Vy * this.acceleration);
+	if ((KEY_PRESSED.a || KEY_PRESSED.d) && !this.hitbox.collided('x'))
+		moveObjects(this.Vx * this.acceleration, 0);
+	
+	if (!KEY_PRESSED.a && !KEY_PRESSED.d && !KEY_PRESSED.w && !KEY_PRESSED.s) {
+		this.animate = false;
+		this.sx = 0;
+	}
+}
+
+Player.prototype.addItem = function(item) {
+	if (thisRoomItems[item.key] !== undefined)
+		delete thisRoomItems[item.key];
+	
+	this.inventory[item.key] = item;
+}
+
+Player.prototype.removeItem = function(item) {
+	delete this.inventory[item.key];
+}
+
+class Npc extends Character {
+	constructor({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground, lvl, lvlProgression }) {
+		super({ src, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground });
 		this.lvl = lvl;
 		this.lvlProgression = lvlProgression;
-		this.hitbox = new Hitbox(x + width / 4, y + height - width / 2, width / 2, width / 2);
 		this.eventBox = new EventTile(
 			{
 				x: this.hitbox.x - WIDTH,
@@ -108,62 +129,62 @@ class Npc extends Sprite {
 				type: "npc",
 				warningName: "talk"
 			}
-		);
-		
+		);		
 	}
+}
 
-	drawWarning() {
-		if (collision(player.hitbox, this.eventBox, "all-still")) this.eventBox.drawWarning(this);
-	}
+Npc.prototype.drawWarning = function() {
+	if (collision(player.hitbox, this.eventBox, "all-still"))
+		this.eventBox.drawWarning(this);
+}
 
-	move(x, y) {
-		this.x += x;
-		this.y += y;
-		this.eventBox.move(x, y);
-		this.hitbox.move(x, y);
-	}
+Npc.prototype.move = function(x, y) {
+	this.x += x;
+	this.y += y;
+	this.eventBox.move(x, y);
+	this.hitbox.move(x, y);
 }
 
 class AnimationHandler extends Sprite {
 	constructor(obj) {
 		super(obj);
 	}
+}
 
-	checkFrame(sx, sy) {
-		return (this.sx === sx * this.sWidth && this.sy === sy * this.sHeight);
-	}
+AnimationHandler.prototype.checkFrame = function(sx, sy) {
+	return (this.sx === sx * this.sWidth && this.sy === sy * this.sHeight);
+}
 
-	setAnimationLoop(startIndex, endIndex, frameSpeed) {
-		window.cancelAnimationFrame(animationID);
+AnimationHandler.prototype.setAnimationLoop = function(startIndex, endIndex, frameSpeed) {
+	window.cancelAnimationFrame(animationID);
 
-		this.frameStart = startIndex;
-		this.frameEnd = endIndex;
-		this.frameSpeed = frameSpeed;
-		this.animate = true;
+	this.frameStart = startIndex;
+	this.frameEnd = endIndex;
+	this.frameSpeed = frameSpeed;
+	this.animate = true;
 
-		animationUpdate();
-	}
+	animationUpdate();
+}
 
-	stopAnimationLoop(sx, sy) {
-		window.cancelAnimationFrame(animationID);
+AnimationHandler.prototype.stopAnimationLoop = function(sx, sy) {
+	window.cancelAnimationFrame(animationID);
 
-		this.sx = sx * this.sWidth;
-		this.sy = sy * this.sHeight;
-		this.animate = false;
+	this.sx = sx * this.sWidth;
+	this.sy = sy * this.sHeight;
+	this.animate = false;
 
-		animationUpdate();
-	}
+	animationUpdate();
+}
 
-	setFrame(sx, sy) {
-		this.sx = sx * this.sWidth;
-		this.sy = sy * this.sHeight;
+AnimationHandler.prototype.setFrame = function(sx, sy) {
+	this.sx = sx * this.sWidth;
+	this.sy = sy * this.sHeight;
 
-		animationUpdate();
-	}
+	animationUpdate();
+}
 
-	nextFrame() {
-		this.sx += this.sWidth;
+AnimationHandler.prototype.nextFrame = function() {
+	this.sx += this.sWidth;
 
-		animationUpdate();
-	}
+	animationUpdate();
 }

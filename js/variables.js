@@ -26,6 +26,7 @@ const EVENT_WARNINGS = {
 };
 const NPCS = {};
 const ROOMS = {};
+const ITEMS = {};
 
 EVENT_WARNINGS.exclamation.src = './img/warning-exclamation.png';
 EVENT_WARNINGS.talk.src = './img/warning-talk.png';
@@ -41,3 +42,4 @@ let animationID;
 let player;
 let thisRoom;
 let thisRoomNpcs = {};
+let thisRoomItems = {};

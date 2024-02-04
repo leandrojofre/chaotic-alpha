@@ -1,8 +1,7 @@
 const EVENTS_NPCS = {
 	placeholder: [
 		[
-			async () => {
-				stopGameUpdate();
+			async () => { // Level 0, Progression 0
 
 				setSpeakers({
 					name: "placeholder",
@@ -59,12 +58,11 @@ const EVENTS_NPCS = {
 					"placeholder/ Enjoy your day and try to not die!"
 				])
 
+				ITEMS.core_of_chaos.sendToInventory();
 				NPCS.placeholder.lvlProgression++;
-				startGameUpdate();
 			},
-			async () => {
-				stopGameUpdate();
-
+			async () => { // Level 0, Progression 1
+				
 				setSpeakers({
 					name: "placeholder",
 					position: 0,
@@ -74,8 +72,6 @@ const EVENTS_NPCS = {
 				await speakWithNpc([
 					"placeholder/ That's all"
 				]);
-
-				startGameUpdate();
 			}
 		]
 	]

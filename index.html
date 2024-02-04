@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<section id="main-menu" class="menu">
-			<img class="button" src="./img/button-play.png" onclick="startGame()">
+			<div id="start-button" class="button"><p>PLAY</p></div>
 		</section>
 
 		<section id="game">
@@ -18,8 +18,8 @@
 
 			<div id="overworld-text-box">
 				<div id="npcs-image-box">
-					<img id="speaker-0" class="speaker" src="img/npc/speak-clothe-default.png">
-					<img id="speaker-1" class="speaker" src="img/npc/speak-clothe-default.png">
+					<img id="speaker-0" class="speaker" src="./img/npc/speak-clothe-default.png">
+					<img id="speaker-1" class="speaker" src="./img/npc/speak-clothe-default.png">
 				</div>
 				<p id="speak-with-npc"></p>
 			</div>
@@ -48,12 +48,67 @@
 			</div>
 		</section>
 
+		<section id="inventory" class="menu">
+			<div id="inventory-ui">
+				<div>
+					<div class="button" onclick="resumeGame()"><p>RESUME</p></div>
+	
+					<label class="button">
+						<p>STATS</p>
+						<input type="radio" name="ui-button" checked class="radio"></input>
+					</label>
+
+					<label class="button">
+						<p>ITEMS</p>
+						<input type="radio" name="ui-button" class="radio"></input>
+					</label>
+					
+					<label class="button">
+						<p>NPCS</p>
+						<input type="radio" name="ui-button" class="radio"></input>
+					</label>
+				</div>
+			</div>
+
+			<div id="player-stats" class="stats-window" style="display: none;">
+				<div class="stats-info has-custom-background">
+					<img src="./img/npc/player/speak-clothe-default.png" class="speaker">
+					<div>
+						<p id="player-name"></p>
+						<p id="player-bio"></p>
+					</div>
+				</div>
+				<div id="custom-info-player" class="custom-info has-custom-background"></div>
+			</div>
+
+			<div id="items" style="display: none;">
+				<div id="items-info" class="has-custom-background">
+					<img src="./img/item/none.png" id="item-display-img">
+					<div>
+						<p id="item-name">Nothing selected</p>
+						<p id="item-description"></p>
+					</div>
+				</div>
+				<div class="has-custom-background">
+					<div id="item-bag"></div>
+				</div>
+			</div>
+
+			<div id="npcs" style="display: none;">
+				<div class="has-custom-background" style="size: -webkit-fill-avaible;">
+					<div id="npc-list"></div>
+				</div>
+				<div id="npc-stats" class="stats-window" style="display: none;"></div>
+			</div>
+		</section>
+
 		<section id="pause-menu" class="menu" style="display: none;">
 			<input type="button" class="button" id="button-resume">
 		</section>
 
 		<script src="js/variables.js"></script>
 
+		<script src="classes/Item.js"></script>
 		<script src="classes/Room.js"></script>
 		<script src="classes/Sprite.js"></script>
 		<script src="classes/Tile.js"></script>

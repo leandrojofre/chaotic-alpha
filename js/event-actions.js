@@ -17,8 +17,11 @@ function changeRoom(roomName, tileName) {
 		}
 
 	thisRoomNpcs = {};
+	thisRoomItems = {};
 	for (const KEY of Object.keys(NPCS))
 		if (NPCS[KEY].room === player.room) thisRoomNpcs[KEY] = NPCS[KEY];
+	for (const KEY of Object.keys(ITEMS))
+		if (ITEMS[KEY].room === player.room) thisRoomItems[KEY] = ITEMS[KEY];
 
 	let tile = thisRoom.events.find(tile => tile.name === tileName);
 	let offsetX = player.hitbox.x - tile.x - (tile.width / 2 - player.hitbox.width / 2);
@@ -91,8 +94,12 @@ async function changeSpeakerImg(speakerKey) {
 	let speaker = SPEAKERS[speakerKey];
 
 	const $SPEAKER = document.getElementById(`speaker-${speaker.position}`);
-	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
+	
+	if ($SPEAKER.src.includes(`/img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`))
+		return;
 
+	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
+	
 	await loadImages([$SPEAKER]);
 }
 
@@ -198,7 +205,7 @@ async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
 }
 
 function showCheckedButtonActBox() {
-	let arrayRadioButtons = Array.from(document.querySelectorAll(".radio"));
+	let arrayRadioButtons = Array.from(document.getElementsByName("action-button"));
 	let enabledRadioButtons = arrayRadioButtons.filter($radioButton => !$radioButton.disabled);
 
 	for (const $radioButton of enabledRadioButtons) {
@@ -221,7 +228,7 @@ function enableRadioButton($radioButton) {
 	$radioButton.disabled = false;
 
 	changeElementStyle($radioButton.labels[0], [
-		["backgroundColor", "#fdd89b"],
+		["backgroundColor", "#e3b898"],
 		["cursor", "url(./img/cursor1.png) 20 20, pointer"]
 	]);
 }
@@ -233,7 +240,7 @@ function enableRadioButtons(arrayIDs) {
 		return false;
 	};
 
-	document.querySelectorAll(".radio").forEach($button => {
+	document.getElementsByName("action-button").forEach($button => {
 		if (verifyIDs($button.id)) {
 			enableRadioButton($button);
 		} else {

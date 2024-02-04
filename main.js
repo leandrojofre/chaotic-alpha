@@ -27,18 +27,22 @@ function moveObjects(x, y) {
 	
 	for (const KEY of Object.keys(thisRoomNpcs))
 		thisRoomNpcs[KEY].move(x, y);
+	for (const KEY of Object.keys(thisRoomItems))
+		thisRoomItems[KEY].move(x, y);
 }
 
 function drawObjects() {
 	thisRoom.draw();
-
 	let drawables = [player];
-	for (const KEY of Object.keys(thisRoomNpcs)) {
-		drawables.push(thisRoomNpcs[KEY]);
-		thisRoomNpcs[KEY].drawWarning();
-	}
 
-	if (thisRoom.foregrounds[0] !== undefined) drawables.push(...thisRoom.foregrounds);
+	for (const KEY of Object.keys(thisRoomItems))
+		drawables.push(thisRoomItems[KEY]);
+
+	for (const KEY of Object.keys(thisRoomNpcs))
+		drawables.push(thisRoomNpcs[KEY]);
+
+	if (thisRoom.foregrounds[0] !== undefined)
+		drawables.push(...thisRoom.foregrounds);
 
 	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
@@ -59,12 +63,15 @@ function gameUpdate() {
 
 function startPlayerInput() {
 	window.addEventListener("keydown", keyDown);
-	window.addEventListener("keyup", keyUp);	
+	window.addEventListener("keyup", keyUp);
 }
 
 function stopPlayerInput() {
 	window.removeEventListener("keydown", keyDown);
 	window.removeEventListener("keyup", keyUp);
+
+	for (const KEY of Object.keys(KEY_PRESSED))
+		KEY_PRESSED[KEY] = false;
 }
 
 function startGameUpdate() {
@@ -217,26 +224,27 @@ async function startGame() {
 
 	$CANVAS_OVERWORLD.style.display = "flex";
 
-	setLoadingScreen(" Npcs sprites");
-	await fetch(`./json/entities.json`)
+	setLoadingScreen(" Npcs");
+	await fetch("./json/entities.json")
 		.then(response => response.json())
-		.then(async (json) => {
+		.then(async(json) => {
 			player = new Player(json.player);
 			let imagesToLoad = [player.img];
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
 				NPCS[KEY] = new Npc(json[KEY]);
+				NPCS[KEY].key = KEY;
 				imagesToLoad.push(NPCS[KEY].img);
 			}
 
 			await loadImages(imagesToLoad);
 		});
 
-	setLoadingScreen(" Room images");
-	await fetch(`./json/rooms.json`)
+	setLoadingScreen(" Room");
+	await fetch("./json/rooms.json")
 		.then(response => response.json())
-		.then(async (json) => {
+		.then(async(json) => {
 			let imagesToLoad = [];
 
 			for (const KEY of Object.keys(json)) {
@@ -250,5 +258,29 @@ async function startGame() {
 	setLoadingScreen(" Generating collisions");
 	await createCollisionsInRooms();
 
+	setLoadingScreen(" Items");
+	await fetch("./json/items.json")
+		.then(response => response.json())
+		.then(async(json) => {
+			let imagesToLoad = [];
+
+			for (const KEY of Object.keys(json)) {
+				json[KEY].src = `./img/item/${KEY}.png`;
+				json[KEY].key = KEY;
+				ITEMS[KEY] = new Item(json[KEY]);
+				imagesToLoad.push(ITEMS[KEY].img);
+
+				if (ITEMS[KEY].room === "inventory")
+					ITEMS[KEY].sendToInventory();
+			}
+
+			await loadImages(imagesToLoad);
+		})
+
 	changeRoom(player.room, "playerSpawn");
+}
+
+window.onload = () => {
+	document.getElementById("start-button").onclick = () => startGame();
+	document.getElementsByName("ui-button").forEach($button => $button.onclick = () => swapUiScreens());
 }

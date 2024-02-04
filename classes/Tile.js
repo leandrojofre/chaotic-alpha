@@ -6,24 +6,24 @@ class Tile {
 		this.height = height;
 		this.canCollide = canCollide;
 	}
+}
 
-	expandWidth() {
-		this.width += WIDTH;
-	}
+Tile.prototype.expandWidth = function() {
+	this.width += WIDTH;
+}
 
-	expandHeight() {
-		this.height += HEIGHT;
-	}
+Tile.prototype.expandHeight = function() {
+	this.height += HEIGHT;
+}
 
-	move(x, y) {
-		this.y += y;
-		this.x += x;
-	}
+Tile.prototype.move = function(x, y) {
+	this.y += y;
+	this.x += x;
+}
 
-	drawColor(color) {
-		context.fillStyle = color;
-		context.fillRect(this.x, this.y, this.width, this.height);		
-	}
+Tile.prototype.drawColor = function(color) {
+	context.fillStyle = color;
+	context.fillRect(this.x, this.y, this.width, this.height);		
 }
 
 class CollisionTile extends Tile {
@@ -36,16 +36,16 @@ class Hitbox extends CollisionTile {
 	constructor(x, y, width, height) {
 		super(x, y, width, height);
 	}
+}
 
-	collided(axis) {
-		for (const TILE of thisRoom.collisions)
-			if (collision(this, TILE, axis)) return true;
-		
-		for (const KEY of Object.keys(thisRoomNpcs))
-			if (collision(this, NPCS[KEY].hitbox, axis)) return true;
-		
-		return false;
-	}
+Hitbox.prototype.collided = function(axis) {
+	for (const TILE of thisRoom.collisions)
+		if (collision(this, TILE, axis)) return true;
+	
+	for (const KEY of Object.keys(thisRoomNpcs))
+		if (collision(this, NPCS[KEY].hitbox, axis)) return true;
+	
+	return false;
 }
 
 class EventTile extends Tile {
@@ -59,20 +59,20 @@ class EventTile extends Tile {
 		if (this.customProperties.hide === undefined)
 			this.customProperties.hide = false;
 	}
+}
 
-	changeWarningImg(warningImg) {
-		this.warningImg = warningImg;
-	}
+EventTile.prototype.changeWarningImg = function(warningImg) {
+	this.warningImg = warningImg;
+}
 
-	drawWarning(target) {
-		context.drawImage(
-			this.warningImg,
-			target.x + (target.width / 2) - (WIDTH / 2),
-			target.y - HEIGHT,
-			WIDTH,
-			HEIGHT
-		);
-	}
+EventTile.prototype.drawWarning = function(target) {
+	context.drawImage(
+		this.warningImg,
+		target.x + (target.width / 2) - (WIDTH / 2),
+		target.y - HEIGHT,
+		WIDTH,
+		HEIGHT
+	);
 }
 
 class ForegroundTile extends Tile {
@@ -82,19 +82,19 @@ class ForegroundTile extends Tile {
 		this.sx = x;
 		this.sy = y;
 	}
+}
 
-	draw() {
-		context.imageSmoothingEnabled = false;
-		context.drawImage(
-			this.img,
-			this.sx,
-			this.sy,
-			this.width,
-			this.height,
-			this.x,
-			this.y,
-			this.width,
-			this.height
-		);	
-	}
+ForegroundTile.prototype.draw = function() {
+	context.imageSmoothingEnabled = false;
+	context.drawImage(
+		this.img,
+		this.sx,
+		this.sy,
+		this.width,
+		this.height,
+		this.x,
+		this.y,
+		this.width,
+		this.height
+	);	
 }
