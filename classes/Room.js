@@ -1,17 +1,21 @@
 class Room {
-	constructor({ name, x, y, width, height, src, foregroundSrc, roofSrc,backgroundColor }) {
+	constructor({ name, x = 0, y = 0, width, height, backgroundColor }) {
 		this.name = name;
 		this.backgroundColor = backgroundColor;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+
 		this.img = new Image();
-		this.img.src = src;
+		this.img.src = `./img/room/${name}/room.png`;
+		
 		this.foregroundImg = new Image();
-		this.foregroundImg.src = foregroundSrc;
+		this.foregroundImg.src = `./img/room/${name}/foreground.png`;
+
 		this.roofImg = new Image();
-		this.roofImg.src = roofSrc;
+		this.roofImg.src = `./img/room/${name}/roof.png`;
+
 		this.events = [];
 		this.collisions = [];
 		this.foregrounds = [];

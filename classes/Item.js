@@ -1,5 +1,14 @@
 class Item {
-	constructor({src, name, description, key, room = "void", x, y, sx}) {
+	constructor({
+		src,
+		name,
+		description,
+		key,
+		room = "void",
+		x = 0,
+		y = 0,
+		sx = 0
+	}) {
 		this.img = new Image();
 		this.img.src = src;
 		this.name = name;

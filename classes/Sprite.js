@@ -1,6 +1,18 @@
 class Sprite {
-	constructor({ src, x=0, y=0, width, height, sy=0, animate=false, sWidth=width, sHeight=height, frameSpeed=18 }) {
+	constructor({
+		src,
+		x=0,
+		y=0,
+		width,
+		height,
+		sy=0,
+		animate=false,
+		sWidth=width,
+		sHeight=height,
+		frameSpeed=18
+	}) {
 		this.img = new Image();
+		this.src = src;
 		this.img.src = src;
 		this.x = x;
 		this.y = y;
@@ -52,12 +64,12 @@ Sprite.prototype.draw = function() {
 class Character extends Sprite {
 	constructor({
 		src,
-		speakingClothesSrc = "./img/npc/speak-clothe-default.png",
+		speakingClothesSrc,
 		x,
 		y,
 		width,
 		height,
-		sy,
+		sy = 0,
 		animate,
 		frameSpeed,
 		name,
@@ -66,7 +78,16 @@ class Character extends Sprite {
 		textColor,
 		textBackground
 	}) {
-		super({ src, x, y, width, height, sy, animate, frameSpeed });
+		super({
+			src,
+			x,
+			y,
+			width,
+			height,
+			sy,
+			animate,
+			frameSpeed
+		});
 		this.speakingClothesSrc = speakingClothesSrc;
 		this.name = name;
 		this.bio = bio;
@@ -78,7 +99,19 @@ class Character extends Sprite {
 }
 
 class Player extends Character {
-	constructor({ src, speakingClothesSrc, width, height, sy, frameSpeed, name, bio, room, textColor, textBackground }) {
+	constructor({
+		src = "./img/npc/player/overworld.png",
+		speakingClothesSrc = "./img/npc/player/speak-clothe-default.png",
+		width = 32,
+		height = 64,
+		sy,
+		frameSpeed,
+		name,
+		bio,
+		room,
+		textColor,
+		textBackground
+	}) {
 		super({
 			src,
 			speakingClothesSrc,
@@ -132,8 +165,40 @@ Player.prototype.removeItem = function(item) {
 }
 
 class Npc extends Character {
-	constructor({ src, speakingClothesSrc, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground, lvl, lvlProgression }) {
-		super({ src, speakingClothesSrc, x, y, width, height, sy, animate, frameSpeed, name, bio, room, textColor, textBackground });
+	constructor({
+		name,
+		src = `./img/npc/${name.toLowerCase()}/overworld.png`,
+		speakingClothesSrc,
+		x,
+		y,
+		width = 32,
+		height = 64,
+		sy,
+		animate,
+		frameSpeed,
+		bio,
+		room,
+		textColor,
+		textBackground,
+		lvl = 0,
+		lvlProgression = 0
+	}) {
+		super({
+			src,
+			speakingClothesSrc,
+			x,
+			y,
+			width,
+			height,
+			sy,
+			animate,
+			frameSpeed,
+			name,
+			bio,
+			room,
+			textColor,
+			textBackground
+		});
 		this.lvl = lvl;
 		this.lvlProgression = lvlProgression;
 		this.eventBox = new EventTile(
