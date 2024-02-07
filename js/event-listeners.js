@@ -3,7 +3,7 @@ function catchEvent() {
 		if (collision(player.hitbox, thisRoomNpcs[NPC].eventBox, "all-still")) return thisRoomNpcs[NPC].eventBox;
 
 	for (const TILE of thisRoom.events) {
-		if (TILE.customProperties.hide) break;
+		if (TILE.customProperties.hide) continue;
 		if (collision(player.hitbox, TILE, "all-still")) return TILE;
 	}
 
