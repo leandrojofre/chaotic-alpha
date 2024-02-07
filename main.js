@@ -155,13 +155,14 @@ function createTileObjects(room, jsonData) {
 	const ROW_LENGTH = room.width / WIDTH;
 	const SIMBOL_COLLISION = jsonData.tilesets.find(tileSet => tileSet.source === "..\/aseprite\/rooms\/bounds.tsx").firstgid;
 	const SIMBOL_FOREGROUND = SIMBOL_COLLISION + 2;
+	const SIMBOL_COLLISION_FOREGROUND = SIMBOL_COLLISION + 3;
 
 	let boundsData = findLayer("bounds").data;
 	let mappedBoundsData = [];
 
 	while (boundsData.length > 0)
 		mappedBoundsData.push(boundsData.splice(0, ROW_LENGTH));
-
+	
 	mappedBoundsData.forEach((row, i) => {
 		row.forEach((tile, j) => {
 			const X = j * WIDTH;
@@ -170,7 +171,7 @@ function createTileObjects(room, jsonData) {
 				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
 			if (tile === SIMBOL_FOREGROUND) 
 				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
-			if (tile === SIMBOL_FOREGROUND + SIMBOL_COLLISION) {
+			if (tile === SIMBOL_COLLISION_FOREGROUND) {
 				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
 				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
 			}
