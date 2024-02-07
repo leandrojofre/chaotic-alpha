@@ -197,6 +197,9 @@ async function createCollisionsInRooms() {
 			.then(response => response.json())
 			.then(json => jsonData = json);
 
+		ROOMS[KEY].width = jsonData.width * WIDTH;
+		ROOMS[KEY].height = jsonData.height * HEIGHT;
+
 		createTileObjects(ROOMS[KEY], jsonData);
 	}
 }
