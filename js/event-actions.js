@@ -45,12 +45,6 @@ const SPEAKERS = {
 		clothe: "default"
 	}
 };
-				
-function setSpeakers(optionsNpc, clothePlayer) {
-	SPEAKERS.npc = optionsNpc;
-	SPEAKERS.player.position = 1 - optionsNpc.position;
-	SPEAKERS.player.clothe = clothePlayer ?? "default";
-}
 
 async function timeOut(timeInSeconds) {
 	await new Promise(resolve => setTimeout(resolve, timeInSeconds * 1000));
@@ -103,11 +97,6 @@ async function changeSpeakerImg(speakerKey) {
 	await loadImages([$SPEAKER]);
 }
 
-async function changeClothes(objKey, clothe) {
-	SPEAKERS[objKey].clothe = clothe;
-	await changeSpeakerImg(objKey);
-}
-
 function generateJsonDialogueArray(array) {
 	let jsonDialogueArray = [];
 
@@ -139,6 +128,11 @@ async function readDialogues(dialogues, targetBoxElement) {
 	}
 }
 
+async function changeClothes(objKey, clothe) {
+	SPEAKERS[objKey].clothe = clothe;
+	await changeSpeakerImg(objKey);
+}
+
 async function speakWithNpc(dialogues) {
 	await changeSpeakerImg("npc");
 	await changeSpeakerImg("player");
@@ -148,6 +142,12 @@ async function speakWithNpc(dialogues) {
 	await readDialogues(dialogues, $TEXT_BOX_NPC_SPEAK);
 	await timeOut(0.25);
 	$TEXT_BOX_OVERWORLD.style.display = "none";
+}
+
+function setSpeakers(optionsNpc, clothePlayer) {
+	SPEAKERS.npc = optionsNpc;
+	SPEAKERS.player.position = 1 - optionsNpc.position;
+	SPEAKERS.player.clothe = clothePlayer ?? "default";
 }
 
 // * ANIMATIONS
@@ -182,26 +182,6 @@ function stopAnimation() {
 	window.cancelAnimationFrame(animationID);
 	animationHandler = undefined;
 	$ANIMATION_BOX.style.display = "none";
-}
-
-function toggleTextBoxAnimation() {
-	if ($SPEAK_ANIMATION.style.display === "flex") {
-		$SPEAK_ANIMATION.style.display = "none";
-		$ACTION_BUTTONS.style.display = "flex";
-	} else if ($SPEAK_ANIMATION.style.display === "none") {
-		$SPEAK_ANIMATION.style.display = "flex";
-		$ACTION_BUTTONS.style.display = "none";
-	}
-}
-
-async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
-	await startAnimation(animationHandlerOptions);
-	$SPEAK_ANIMATION.style.display = "flex";
-
-	await readDialogues(dialogues, $SPEAK_ANIMATION);
-	$SPEAK_ANIMATION.style.display = "none";
-
-	stopAnimation();
 }
 
 function showCheckedButtonActBox() {
@@ -247,6 +227,16 @@ function enableRadioButtons(arrayIDs) {
 			disableRadioButton($button);
 		}
 	})
+}
+
+function toggleTextBoxAnimation() {
+	if ($SPEAK_ANIMATION.style.display === "flex") {
+		$SPEAK_ANIMATION.style.display = "none";
+		$ACTION_BUTTONS.style.display = "flex";
+	} else if ($SPEAK_ANIMATION.style.display === "none") {
+		$SPEAK_ANIMATION.style.display = "flex";
+		$ACTION_BUTTONS.style.display = "none";
+	}
 }
 
 function createActionButton(x, y , w, h, ev) {
@@ -330,4 +320,14 @@ async function animationInteract(...buttons) {
 		new Promise(resolve => resolveActionQueue(element, resolve))
 	));
 	toggleTextBoxAnimation();
+}
+
+async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
+	await startAnimation(animationHandlerOptions);
+	$SPEAK_ANIMATION.style.display = "flex";
+
+	await readDialogues(dialogues, $SPEAK_ANIMATION);
+	$SPEAK_ANIMATION.style.display = "none";
+
+	stopAnimation();
 }

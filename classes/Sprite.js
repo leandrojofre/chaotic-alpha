@@ -27,7 +27,6 @@ class Sprite {
 		this.frameSpeed = frameSpeed;
 		this.frameStart = 1;
 		this.frameEnd = 5;
-		this.img.onload = () => this.frameEnd = this.img.width / this.sWidth;
 	}
 }
 

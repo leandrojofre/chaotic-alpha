@@ -352,12 +352,13 @@ div{
 		& label {
 			display: block;
 			overflow: hidden;
-			width: calc((var(--sprite-width) * 2) / 5);
-			height: calc((var(--sprite-width) * 2) / 2.5);
+			width: 64px;
+			height: 128px;
 
 			& img {
-				width: calc(var(--sprite-width) * 2);
-				transform: translateY(-1px);
+				width: auto;
+				transform: scale(2);
+				transform-origin: left top;
 			}
 		}
 	}
@@ -372,7 +373,14 @@ div{
 			& div {
 				height: -webkit-fill-available;
 				width: auto;
-				padding: 24px 24px 24px 0px;
+				clip-path: content-box;
+				padding: 24px 24px 28px 0px;
+
+				& #npc-bio {
+					padding: 2px 3px 22px;
+					overflow-y: scroll;
+					height: -webkit-fill-available;
+				}
 			}
 		}
 
@@ -384,8 +392,19 @@ div{
 			width: 128px;
 			height: 16px;
 
-			& p {font-size: 12px;}
+			& p {
+				font-size: 12px;
+			}
 		}
+	}
+}
+
+@keyframes idle {
+	0% {
+		object-position: -32px 0;
+	}
+	100% {
+		object-position: var(--sprite-width) 0;
 	}
 }
 

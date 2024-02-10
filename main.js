@@ -243,6 +243,10 @@ async function startGame() {
 			}
 
 			await loadImages(imagesToLoad);
+			
+			player.frameEnd = player.img.width / player.sWidth;
+			for (const key of Object.keys(NPCS))
+				NPCS[key].frameEnd = NPCS[key].img.width / NPCS[key].sWidth;
 		});
 
 	setLoadingScreen(" Room");
