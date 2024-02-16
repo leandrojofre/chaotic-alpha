@@ -352,7 +352,7 @@ div{
 		& label {
 			display: block;
 			overflow: hidden;
-			width: 64px;
+			width: 128px;
 			height: 128px;
 
 			& img {
@@ -401,7 +401,7 @@ div{
 
 @keyframes idle {
 	0% {
-		object-position: -32px 0;
+		object-position: var(--step-width) 0;
 	}
 	100% {
 		object-position: var(--sprite-width) 0;
