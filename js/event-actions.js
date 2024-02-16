@@ -36,13 +36,11 @@ function changeRoom(roomName, tileName) {
 const SPEAKERS = {
 	npc: {
 		name: "",
-		position: 0,
-		clothe: ""
+		position: 0
 	},
 	player: {
 		name: "player",
-		position: 1,
-		clothe: "default"
+		position: 1
 	}
 };
 
@@ -85,16 +83,13 @@ function generateDialogue(text, textBox) {
 }
 
 async function changeSpeakerImg(speakerKey) {
-	let speaker = SPEAKERS[speakerKey];
-
-	const $SPEAKER = document.getElementById(`speaker-${speaker.position}`);
+	let speakerConfig = SPEAKERS[speakerKey];
+	const $SPEAKER = document.getElementById(`speaker-${speakerConfig.position}`);
 	
-	if ($SPEAKER.src.includes(`/img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`))
+	if ($SPEAKER.src.includes(speakerConfig.character.speakingClothesSrc))
 		return;
 
-	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
-	
-	await loadImages([$SPEAKER]);
+	$SPEAKER.src = speakerConfig.character.speakingClothesSrc;
 }
 
 function generateJsonDialogueArray(array) {
@@ -129,7 +124,8 @@ async function readDialogues(dialogues, targetBoxElement) {
 }
 
 async function changeClothes(objKey, clothe) {
-	SPEAKERS[objKey].clothe = clothe;
+	let speakerConfig = SPEAKERS[objKey];
+	speakerConfig.character.speakingClothesSrc = `./img/npc/${speakerConfig.name}/speak-clothe-${clothe}.png`;
 	await changeSpeakerImg(objKey);
 }
 
@@ -144,10 +140,11 @@ async function speakWithNpc(dialogues) {
 	$TEXT_BOX_OVERWORLD.style.display = "none";
 }
 
-function setSpeakers(optionsNpc, clothePlayer) {
+function setSpeakers(optionsNpc) {
 	SPEAKERS.npc = optionsNpc;
+	SPEAKERS.npc.character = NPCS[optionsNpc.name];
 	SPEAKERS.player.position = 1 - optionsNpc.position;
-	SPEAKERS.player.clothe = clothePlayer ?? "default";
+	SPEAKERS.player.character = player;
 }
 
 // * ANIMATIONS

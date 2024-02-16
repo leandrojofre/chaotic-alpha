@@ -80,8 +80,6 @@ function fillNpcsInfo() {
 	const npcList = Array.from(document.getElementsByName("npcs-info-selector"));
 	const selectedNpc = NPCS[npcList.find(npc => npc.checked).id];
 
-	$npcInfo.style.display = "flex";
-
 	if (document.getElementById("npc-display-img").src !== selectedNpc.speakingClothesSrc)
 		document.getElementById("npc-display-img").src = selectedNpc.speakingClothesSrc;
 
@@ -90,6 +88,8 @@ function fillNpcsInfo() {
 
 	if (document.getElementById("npc-name").innerText !== selectedNpc.name)
 		document.getElementById("npc-name").innerText = selectedNpc.name;
+
+	$npcInfo.style.display = "flex";
 
 	document.getElementById("npc-stats-back-button").addEventListener("click", () => {
 		document.getElementById("npc-list").parentNode.style.display = "flex";

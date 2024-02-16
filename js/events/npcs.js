@@ -5,8 +5,7 @@ const EVENTS_NPCS = {
 
 				setSpeakers({
 					name: "placeholder",
-					position: 0,
-					clothe: "default"	
+					position: 0
 				});
 
 				await speakWithNpc([
@@ -65,10 +64,10 @@ const EVENTS_NPCS = {
 				
 				setSpeakers({
 					name: "placeholder",
-					position: 0,
-					clothe: "default"	
+					position: 0
 				});
-
+				
+				await changeClothes("npc", "test");
 				await speakWithNpc([
 					"placeholder/ That's all"
 				]);
