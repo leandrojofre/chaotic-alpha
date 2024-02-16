@@ -12,7 +12,7 @@
 		"name": "Placeholder",
 		"bio": "Omnipotent entity",
 		"room": "home",
-		"x": 224,
+		"x": 208,
 		"y": 288,
 		"animate": true,
 		"frameSpeed": 12,

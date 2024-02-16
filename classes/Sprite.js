@@ -93,7 +93,12 @@ class Character extends Sprite {
 		this.room = room;
 		this.textColor = textColor;
 		this.textBackground = textBackground;
-		this.hitbox = new Hitbox(this.x + width / 4, this.y + height - width / 2, width / 2, width / 2);
+		this.hitbox = new Hitbox(
+			this.x + ((width -  16) / 2),
+			this.y + height - 16,
+			16,
+			16
+		);
 	}
 }
 
@@ -101,7 +106,7 @@ class Player extends Character {
 	constructor({
 		src = "./img/npc/player/overworld.png",
 		speakingClothesSrc = "./img/npc/player/speak-clothe-default.png",
-		width = 32,
+		width = 64,
 		height = 64,
 		sy,
 		frameSpeed,
@@ -114,10 +119,10 @@ class Player extends Character {
 		super({
 			src,
 			speakingClothesSrc,
-			x: SCREEN_WIDTH / 2 - width / 2,
-			y: SCREEN_HEIGHT / 2 - height / 2,
 			width,
 			height,
+			x: SCREEN_WIDTH / 2 - width / 2,
+			y: SCREEN_HEIGHT / 2 - height / 2,
 			sy,
 			frameSpeed,
 			name,
@@ -170,7 +175,7 @@ class Npc extends Character {
 		speakingClothesSrc,
 		x,
 		y,
-		width = 32,
+		width = 64,
 		height = 64,
 		sy,
 		animate,
