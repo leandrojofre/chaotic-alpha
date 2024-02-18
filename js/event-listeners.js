@@ -129,6 +129,7 @@ function swapUiScreens() {
 		if (radioName === "npcs") {
 			img.style.setProperty("--sprite-width", `-${obj.img.width}px`);
 			img.style.setProperty("--step-width", `-${obj.width}px`);
+			img.style.translate = `0px -${obj.sy * 2}px`;
 			img.style.animation = `
 				idle
 				${1 / (60 / obj.frameSpeed) * (obj.frameEnd - 1)}s
