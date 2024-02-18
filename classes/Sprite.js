@@ -48,8 +48,6 @@ Sprite.prototype.draw = function() {
 		this.height
 	);
 
-	if (this.drawWarning) this.drawWarning();
-
 	if (!this.animate) return;
 	if (!(animationID % this.frameSpeed === 0)) return;
 
@@ -220,8 +218,10 @@ class Npc extends Character {
 }
 
 Npc.prototype.drawWarning = function() {
-	if (collision(player.hitbox, this.eventBox, "all-still"))
-		this.eventBox.drawWarning(this);
+	if (!collision(player.hitbox, this.eventBox, "all-still")) return false;
+	
+	this.eventBox.drawWarning(this);
+	return true;
 }
 
 Npc.prototype.move = function(x, y) {

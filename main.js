@@ -31,6 +31,13 @@ function moveObjects(x, y) {
 		thisRoomItems[KEY].move(x, y);
 }
 
+function drawWarnings() {
+	for (const KEY of Object.keys(thisRoomNpcs))
+		if (thisRoomNpcs[KEY].drawWarning()) break;
+	
+	thisRoom.drawWarning();
+}
+
 function drawObjects() {
 	thisRoom.draw();
 	let drawables = [player];
@@ -57,6 +64,7 @@ function gameUpdate() {
 	thisRoom.drawBackground();
 	drawObjects();
 	thisRoom.drawRoof();
+	drawWarnings();
 	
 	player.walk();
 }
