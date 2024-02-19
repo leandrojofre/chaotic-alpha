@@ -167,9 +167,7 @@ async function startAnimation(animationHandlerOptions) {
 	animationHandlerOptions.width = ANIMATION_WIDTH;
 	animationHandlerOptions.height = ANIMATION_HEIGHT;
 	await setAnimationHandler(animationHandlerOptions);
-	animationHandler.sWidth = animationHandler.img.width;
-	animationHandler.sHeight = animationHandler.img.height;
-
+	
 	$ANIMATION_BOX.style.display = "flex";
 	context = $CANVAS_ANIMATION.getContext('2d');
 	animationUpdate();

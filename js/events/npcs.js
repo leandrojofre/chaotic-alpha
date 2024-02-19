@@ -51,7 +51,11 @@ const EVENTS_NPCS = {
 							})
 						])
 					}
-				], {src: "./img/npc/placeholder/animationEv-0-0.png"});
+				], {
+					src: "./img/npc/placeholder/animationEv-0-0.png",
+					sWidth: 256,
+					sHeight: 256
+				});
 
 				await speakWithNpc([
 					"placeholder/ Enjoy your day and try to not die!"
