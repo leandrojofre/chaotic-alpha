@@ -10,3 +10,6 @@ Or you can also play from here:
 https://leandrojofre.github.io/game-chaotic-alpha/
 
 Current version: v0.0.10-alpha
+
+Font used: Ohrenstead.
+You can get it from: https://uppon-hill.itch.io/ohrenstead-font.

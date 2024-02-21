@@ -218,7 +218,7 @@ function setLoadingScreen(extraText = "") {
 
 	const takeTextInfo = (text) => {return context.measureText(text);};
 	
-	context.font = "16px PressStart2P";
+	context.font = "32px Ohrenstead";
 	context.fillStyle = "white";
 
 	let loadingText = "Loading.." + extraText;
@@ -232,7 +232,7 @@ async function startGame() {
 	document.getElementById("game").style.display = "flex";
 	
 	setLoadingScreen(" Font");
-	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
+	await loadFonts("Ohrenstead", "./Ohrenstead.ttf");
 
 	$CANVAS_OVERWORLD.style.display = "flex";
 
