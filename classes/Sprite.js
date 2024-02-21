@@ -241,27 +241,6 @@ AnimationHandler.prototype.checkFrame = function(sx, sy) {
 	return (this.sx === sx * this.sWidth && this.sy === sy * this.sHeight);
 }
 
-AnimationHandler.prototype.setAnimationLoop = function(startIndex, endIndex, frameSpeed) {
-	window.cancelAnimationFrame(animationID);
-
-	this.frameStart = startIndex;
-	this.frameEnd = endIndex;
-	this.frameSpeed = frameSpeed;
-	this.animate = true;
-
-	animationUpdate();
-}
-
-AnimationHandler.prototype.stopAnimationLoop = function(sx, sy) {
-	window.cancelAnimationFrame(animationID);
-
-	this.sx = sx * this.sWidth;
-	this.sy = sy * this.sHeight;
-	this.animate = false;
-
-	animationUpdate();
-}
-
 AnimationHandler.prototype.setFrame = function(sx, sy) {
 	this.sx = sx * this.sWidth;
 	this.sy = sy * this.sHeight;
@@ -273,4 +252,36 @@ AnimationHandler.prototype.nextFrame = function() {
 	this.sx += this.sWidth;
 
 	animationUpdate();
+}
+
+AnimationHandler.prototype.stopAnimationLoop = function(sx, sy) {
+	window.cancelAnimationFrame(animationID);
+
+	this.animate = false;
+	this.setFrame(sx, sy);
+
+	animationUpdate();
+}
+
+AnimationHandler.prototype.setAnimationLoop = function(startIndex, endIndex, sy, frameSpeed) {
+	this.stopAnimationLoop(endIndex - 1, sy);
+	this.frameStart = startIndex;
+	this.frameEnd = endIndex;
+	this.frameSpeed = frameSpeed;
+	this.sy = sy * this.sHeight;
+	this.animate = true;
+
+	animationUpdate();
+}
+
+AnimationHandler.prototype.setAnimation = async function(startIndex, endIndex, sy, frameSpeed) {
+	const FRAME_DURATION_SEC = 1 / (60 / frameSpeed);
+	
+	this.setFrame(startIndex, sy);
+	await timeOut(FRAME_DURATION_SEC);
+
+	for (let i = 1; i < endIndex; i++) {
+		this.nextFrame();
+		await timeOut(FRAME_DURATION_SEC);
+	}
 }

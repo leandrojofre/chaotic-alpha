@@ -82,7 +82,7 @@ function generateDialogue(text, textBox) {
 	textBox.innerHTML = `<p>${speaker.name}:</p><p>${dialogue}</p>`;
 }
 
-async function changeSpeakerImg(speakerKey) {
+async function setSpeakerImg(speakerKey) {
 	let speakerConfig = SPEAKERS[speakerKey];
 	const $SPEAKER = document.getElementById(`speaker-${speakerConfig.position}`);
 	
@@ -92,46 +92,28 @@ async function changeSpeakerImg(speakerKey) {
 	$SPEAKER.src = speakerConfig.character.speakingClothesSrc;
 }
 
-function generateJsonDialogueArray(array) {
-	let jsonDialogueArray = [];
-
-	for (let i = 0, j = 0; i < array.length; i++) {
-		const element = array[i];
-		
-		if (typeof element === "string") {
-			jsonDialogueArray[j] = {};
-			jsonDialogueArray[j].text = element;
-			j++;
-		}
-
-		if (typeof element === "function")
-			jsonDialogueArray[j - 1].event = element;
-	}
-
-	return jsonDialogueArray;
-}
-
 async function readDialogues(dialogues, targetBoxElement) {
-	for (const DIALOGUE of generateJsonDialogueArray(dialogues)) {
-		generateDialogue(DIALOGUE.text, targetBoxElement);
-		await awaitClick(document);
-
-		if (DIALOGUE.event !== undefined) {
-			await DIALOGUE.event();
+	for (const DIALOGUE of dialogues) {
+		if (typeof DIALOGUE === "string") {
+			generateDialogue(DIALOGUE, targetBoxElement);
+			await awaitClick(document);
+			continue;
 		}
-		
+
+		if (typeof DIALOGUE === "function")
+			await DIALOGUE();		
 	}
 }
 
 async function changeClothes(objKey, clothe) {
 	let speakerConfig = SPEAKERS[objKey];
 	speakerConfig.character.speakingClothesSrc = `./img/npc/${speakerConfig.name}/speak-clothe-${clothe}.png`;
-	await changeSpeakerImg(objKey);
+	await setSpeakerImg(objKey);
 }
 
 async function speakWithNpc(dialogues) {
-	await changeSpeakerImg("npc");
-	await changeSpeakerImg("player");
+	await setSpeakerImg("npc");
+	await setSpeakerImg("player");
 	drawBlackBackground();
 	$TEXT_BOX_OVERWORLD.style.display = "flex";
 
@@ -155,6 +137,7 @@ function animationUpdate() {
 	if (animationHandler.animate)
 		animationID = window.requestAnimationFrame(animationUpdate);
 
+	context.clearRect(0, 0, ANIMATION_WIDTH, ANIMATION_HEIGHT);
 	animationHandler.draw();
 }
 
@@ -174,9 +157,10 @@ async function startAnimation(animationHandlerOptions) {
 }
 
 function stopAnimation() {
-	window.cancelAnimationFrame(animationID);
-	animationHandler = undefined;
 	$ANIMATION_BOX.style.display = "none";
+	window.cancelAnimationFrame(animationID);
+	animationHandler.animate = false;
+	animationHandler = undefined;
 }
 
 function showCheckedButtonActBox() {
