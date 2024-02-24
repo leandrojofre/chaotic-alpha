@@ -17,16 +17,15 @@ async function startEvent(eventTrigger) {
 	if (eventTrigger.type === "npc") {
 		stopGameUpdate();
 
-		let npc = NPCS[eventTriggerName.toLowerCase()];
-		let npcName = npc.name.toLowerCase();
+		let npc = NPCS[eventTriggerName];
 
 		if (
-			EVENTS_NPCS[npcName][npc.lvl] === undefined ||
-			EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression] === undefined
+			EVENTS_NPCS[npc.key][npc.lvl] === undefined ||
+			EVENTS_NPCS[npc.key][npc.lvl][npc.lvlProgression] === undefined
 		)
 			return console.log("No hay más contenido");
 
-		await EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression]();
+		await EVENTS_NPCS[npc.key][npc.lvl][npc.lvlProgression]();
 		return startGameUpdate();
 	}
 
@@ -113,24 +112,24 @@ function swapUiScreens() {
 	}
 
 	let createInfoSelector = function(obj, radioName, callBack) {
-		const label = document.createElement("label");
-		label.className = "unstyled-button";
+		const $label = document.createElement("label");
+		$label.className = "unstyled-button";
 
-		const input = document.createElement("input");
-		input.type = "radio";
-		input.className = "radio";
-		input.name = `${radioName}-info-selector`;
-		input.id = obj.key;
-		input.onclick = () => callBack()
+		const $input = document.createElement("input");
+		$input.type = "radio";
+		$input.className = "radio";
+		$input.name = `${radioName}-info-selector`;
+		$input.id = obj.key;
+		$input.onclick = () => callBack()
 
-		const img = document.createElement("img");
-		img.src = obj.img.src;
+		const $img = document.createElement("img");
+		$img.src = obj.img.src;
 
 		if (radioName === "npcs") {
-			img.style.setProperty("--sprite-width", `-${obj.img.width}px`);
-			img.style.setProperty("--step-width", `-${obj.width}px`);
-			img.style.translate = `0px -${obj.sy * 2}px`;
-			img.style.animation = `
+			$img.style.setProperty("--sprite-width", `-${obj.img.width}px`);
+			$img.style.setProperty("--step-width", `-${obj.width}px`);
+			$img.style.translate = `0px -${obj.sy * 2}px`;
+			$img.style.animation = `
 				idle
 				${1 / (60 / obj.frameSpeed) * (obj.frameEnd - 1)}s
 				steps(${obj.frameEnd - 1})
@@ -138,10 +137,10 @@ function swapUiScreens() {
 			`;
 		}
 
-		label.appendChild(input);
-		label.appendChild(img);
+		$label.appendChild($input);
+		$label.appendChild($img);
 
-		return label;
+		return $label;
 	}
 
 	let createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackOnclick) {

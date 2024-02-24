@@ -17,7 +17,8 @@ const EVENTS_NPCS = {
 				]);
 
 				await speakWithNpcAnimation([
-					"placeholder/ The developer needs to make a test",
+					"placeholder/ The developer needs to make a test, that's why he put me as the Placeholder",
+					async () => NPCS.placeholder.name = "Placeholder",
 					"player/ Who?",
 					() => animationHandler.setFrame(1, 0),
 					"placeholder/ Just take it",

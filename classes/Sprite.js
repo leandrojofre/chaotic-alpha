@@ -70,6 +70,7 @@ class Character extends Sprite {
 		animate,
 		frameSpeed,
 		name,
+		key,
 		bio,
 		room,
 		textColor,
@@ -87,6 +88,7 @@ class Character extends Sprite {
 		});
 		this.speakingClothesSrc = speakingClothesSrc;
 		this.name = name;
+		this.key = key;
 		this.bio = bio;
 		this.room = room;
 		this.textColor = textColor;
@@ -124,6 +126,7 @@ class Player extends Character {
 			sy,
 			frameSpeed,
 			name,
+			key: "player",
 			bio,
 			room,
 			textColor,
@@ -169,7 +172,8 @@ Player.prototype.removeItem = function(item) {
 class Npc extends Character {
 	constructor({
 		name,
-		src = `./img/npc/${name.toLowerCase()}/overworld.png`,
+		key,
+		src = `./img/npc/${key}/overworld.png`,
 		speakingClothesSrc,
 		x,
 		y,
@@ -196,6 +200,7 @@ class Npc extends Character {
 			animate,
 			frameSpeed,
 			name,
+			key,
 			bio,
 			room,
 			textColor,
@@ -209,7 +214,7 @@ class Npc extends Character {
 				y: this.hitbox.y - HEIGHT,
 				width: WIDTH * 2 + this.hitbox.width,
 				height: HEIGHT * 2 + this.hitbox.height,
-				name,
+				name: key,
 				type: "npc",
 				warningName: "talk"
 			}

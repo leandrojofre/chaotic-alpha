@@ -245,8 +245,9 @@ async function startGame() {
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
+				json[KEY].key = KEY;
 				NPCS[KEY] = new Npc(json[KEY]);
-				NPCS[KEY].key = KEY;
+				// NPCS[KEY].key = KEY;
 				imagesToLoad.push(NPCS[KEY].img);
 			}
 

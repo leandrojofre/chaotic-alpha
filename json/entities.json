@@ -9,7 +9,7 @@
 	},
 	"placeholder": {
 		"speakingClothesSrc": "./img/npc/placeholder/speak-clothe-default.png",
-		"name": "Placeholder",
+		"name": "???",
 		"bio": "Omnipotent entity",
 		"room": "home",
 		"x": 208,
