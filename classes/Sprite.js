@@ -10,7 +10,7 @@ class Sprite {
 		sWidth = width,
 		sHeight = height,
 		frameSpeed = 18,
-		frameStart = 1
+		frameStart = 0
 	}) {
 		this.img = new Image();
 		this.src = src;
@@ -70,7 +70,7 @@ class Character extends Sprite {
 		sy = 0,
 		animate,
 		frameSpeed,
-		frameStart,
+		frameStart = 1,
 		name,
 		key,
 		bio,
@@ -187,7 +187,7 @@ class Npc extends Character {
 		sy,
 		animate,
 		frameSpeed,
-		frameStart = 0,
+		frameStart,
 		bio,
 		room,
 		textColor,

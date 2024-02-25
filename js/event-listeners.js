@@ -175,13 +175,13 @@ function detectResumeKey(e) {
 	if (e.key.toLowerCase() === 'q') resumeGame();
 }
 
-function resumeGame() {
+function resumeGame(can_startGameUpdate = true) {
 	document.getElementById("inventory").style.display = "none";
 	document.getElementById("game").style.display = "flex";
 	window.removeEventListener("keydown", detectResumeKey);
 	document.getElementById("npc-stats-back-button")?.click();
 
-	startGameUpdate();
+	if (can_startGameUpdate) startGameUpdate();
 }
 
 function pauseGame() {

@@ -122,7 +122,7 @@ async function loadImages(images) {
 		interval = setInterval(() => {
 			if (loadIsFinished)
 				resolve(clearInterval(interval));
-		}, 100)
+		}, 50)
 	);
 }
 
@@ -176,12 +176,12 @@ function createTileObjects(room, jsonData) {
 			const X = j * WIDTH;
 			const Y = i * HEIGHT;
 			if (tile === SIMBOL_COLLISION) 
-				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
+				room.collisions.push(new CollisionTile({ x: X, y: Y, width: WIDTH, height: HEIGHT }));
 			if (tile === SIMBOL_FOREGROUND) 
-				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
+				room.foregrounds.push(new ForegroundTile({ x: X, y: Y, img: room.foregroundImg }));
 			if (tile === SIMBOL_COLLISION_FOREGROUND) {
-				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
-				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
+				room.collisions.push(new CollisionTile({ x: X, y: Y, width: WIDTH, height: HEIGHT }));
+				room.foregrounds.push(new ForegroundTile({ x: X, y: Y, img: room.foregroundImg }));
 			}
 		});
 	});
@@ -197,8 +197,23 @@ function createTileObjects(room, jsonData) {
 	joinTiles(room.foregrounds);
 }
 
+function loadTileObjects(room) {
+	
+	room.events = room.events.map(tile => new EventTile(tile));
+	room.collisions = room.collisions.map(tile => new CollisionTile(tile));
+	room.foregrounds = room.foregrounds.map(tile => {
+		tile.img = room.foregroundImg;
+		return new ForegroundTile(tile);
+	});
+}
+
 async function createCollisionsInRooms() {
 	for (const KEY of Object.keys(ROOMS)) {
+		if (ROOMS[KEY].events.length > 0 && !(ROOMS[KEY].events[0] instanceof Tile)) {
+			loadTileObjects(ROOMS[KEY]);
+			continue;
+		}
+
 		let jsonData;
 
 		await fetch(`./tiled/${ROOMS[KEY].name}.json`)

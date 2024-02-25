@@ -11,6 +11,7 @@ class Item {
 	}) {
 		this.img = new Image();
 		this.img.src = src;
+		this.src = src;
 		this.name = name;
 		this.description = description;
 		this.key = key;

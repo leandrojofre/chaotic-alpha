@@ -10,6 +10,7 @@
 	<body>
 		<section id="main-menu" class="menu">
 			<div id="start-button" class="button"><p>PLAY</p></div>
+			<div class="button" onclick="loadGame()"><p>LOAD</p></div>
 		</section>
 
 		<section id="game">
@@ -67,6 +68,14 @@
 						<p>NPCS</p>
 						<input type="radio" name="ui-button" class="radio"></input>
 					</label>
+
+					<div class="button" onclick="saveGame()">
+						<p>SAVE</p>
+					</div>
+
+					<div class="button" onclick="loadGameFromPause()">
+						<p>LOAD</p>
+					</div>
 				</div>
 			</div>
 
@@ -129,5 +138,6 @@
 		<script src="js/event-listeners.js"></script>
 		
 		<script src="main.js"></script>
+		<script src="js/save-game.js"></script>
 	</body>
 </html>

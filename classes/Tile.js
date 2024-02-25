@@ -27,14 +27,14 @@ Tile.prototype.drawColor = function(color) {
 }
 
 class CollisionTile extends Tile {
-	constructor(x, y, width, height) {
+	constructor({ x, y, width, height }) {
 		super(x, y, true, width, height);
 	}
 }
 
 class Hitbox extends CollisionTile {
 	constructor(x, y, width, height) {
-		super(x, y, width, height);
+		super({ x, y, width, height });
 	}
 }
 
@@ -49,11 +49,13 @@ Hitbox.prototype.collided = function(axis) {
 }
 
 class EventTile extends Tile {
-	constructor({x, y, width, height, name, type, warningName = "exclamation", properties = []}) {
+	constructor({ x, y, width, height, name, type, warningName = "exclamation", properties = [] }) {
 		super(x, y, false, width, height);
 		this.name = name;
 		this.type = (type === "") ? this.type = "room" : type;
+		this.warningName = warningName;
 		this.warningImg = EVENT_WARNINGS[warningName];
+		this.properties = properties;
 		this.customProperties = arrayToPropertiesObject(properties);
 
 		if (this.customProperties.hide === undefined)
@@ -76,11 +78,11 @@ EventTile.prototype.drawWarning = function(target) {
 }
 
 class ForegroundTile extends Tile {
-	constructor(x, y, img) {
-		super(x, y, false);
+	constructor({ x, y, img, width, height, sx = x, sy = y }) {
+		super(x, y, false, width, height);
 		this.img = img;
-		this.sx = x;
-		this.sy = y;
+		this.sx = sx;
+		this.sy = sy;
 	}
 }
 
