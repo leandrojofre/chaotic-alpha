@@ -17,11 +17,11 @@ const EVENTS_NPCS = {
 				]);
 
 				await speakWithNpcAnimation([
-					"placeholder/ The developer needs to make a test, that's why he put me as the Placeholder",
+					"placeholder/ The developer needs to make a test, that's why he put me as the Placeholder.",
 					async () => NPCS.placeholder.name = "Placeholder",
-					"player/ Who?",
+					"player/ ¿Who?",
 					() => animationHandler.setFrame(1, 0),
-					"placeholder/ Just take it",
+					"placeholder/ Just take it.",
 					async () => {
 						await animationInteract([
 							"test1",
@@ -51,7 +51,10 @@ const EVENTS_NPCS = {
 								toggleTextBoxAnimation();
 							})
 						])
-					}
+					},
+					"placeholder/ We knew the world would not be the same. A few people laughed, a few people cried. Most people were silent. I remembered the line from the Hindu scripture, the Bhagavad-Gita. Vishnu is trying to persuade the Prince that he should do his duty, and, to impress him, takes on his multi-armed form and says, 'Now I am become Death, the destroyer of worlds.' I suppose we all thought that, one way or another.",
+					"player/ ¿What?",
+					"placeholder/ A test for the overflowing text."
 				], {
 					src: "./img/npc/placeholder/animationEv-0-0.png",
 					sWidth: 256,

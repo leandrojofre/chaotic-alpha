@@ -16,6 +16,7 @@
 		"y": 288,
 		"animate": true,
 		"frameSpeed": 12,
+		"frameStart": 3,
 		"textColor": "black",
 		"textBackground": "white"
 	}

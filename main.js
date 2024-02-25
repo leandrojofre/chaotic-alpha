@@ -33,7 +33,7 @@ function moveObjects(x, y) {
 
 function drawWarnings() {
 	for (const KEY of Object.keys(thisRoomNpcs))
-		if (thisRoomNpcs[KEY].drawWarning()) break;
+		if (thisRoomNpcs[KEY].drawWarning()) return;
 	
 	thisRoom.drawWarning();
 }
@@ -247,7 +247,6 @@ async function startGame() {
 				if (KEY === "player") continue;
 				json[KEY].key = KEY;
 				NPCS[KEY] = new Npc(json[KEY]);
-				// NPCS[KEY].key = KEY;
 				imagesToLoad.push(NPCS[KEY].img);
 			}
 

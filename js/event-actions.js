@@ -77,8 +77,9 @@ function generateDialogue(text, textBox) {
 		["webkitTextFillColor", speaker.textColor],
 		["backgroundColor", speaker.textBackground],
 		["border", `4px solid ${speaker.textColor}`]
-	])
-	
+	]);
+
+	textBox.style.setProperty("--scrollbar-color", speaker.textColor);	
 	textBox.innerHTML = `<p>${speaker.name}:</p><p>${dialogue}</p>`;
 }
 
@@ -219,7 +220,18 @@ function toggleTextBoxAnimation() {
 }
 
 function createActionButton(x, y , w, h, ev) {
-	return {x: x * 64, y: y * 64, w: w * 64, h: h * 64, event: ev};
+	const TILE_AMOUNT_X = animationHandler.sWidth / WIDTH;
+	const TILE_AMOUNT_Y = animationHandler.sHeight / HEIGHT;
+	const RESIZE_NUMBER_X = ANIMATION_WIDTH / TILE_AMOUNT_X;
+	const RESIZE_NUMBER_Y = ANIMATION_HEIGHT / TILE_AMOUNT_Y;
+
+	return {
+		x: x * RESIZE_NUMBER_X,
+		y: y * RESIZE_NUMBER_Y,
+		w: w * RESIZE_NUMBER_X,
+		h: h * RESIZE_NUMBER_Y,
+		event: ev
+	};
 }
 
 async function animationInteract(...buttons) {

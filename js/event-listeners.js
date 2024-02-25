@@ -111,7 +111,7 @@ function swapUiScreens() {
 		return;
 	}
 
-	let createInfoSelector = function(obj, radioName, callBack) {
+	const createInfoSelector = function(obj, radioName, callBack) {
 		const $label = document.createElement("label");
 		$label.className = "unstyled-button";
 
@@ -126,13 +126,13 @@ function swapUiScreens() {
 		$img.src = obj.img.src;
 
 		if (radioName === "npcs") {
-			$img.style.setProperty("--sprite-width", `-${obj.img.width}px`);
-			$img.style.setProperty("--step-width", `-${obj.width}px`);
+			$img.style.setProperty("--sprite-width", `${obj.img.width * -1}px`);
+			$img.style.setProperty("--step-start", `${obj.frameStart * obj.width * -1}px`);
 			$img.style.translate = `0px -${obj.sy * 2}px`;
 			$img.style.animation = `
 				idle
-				${1 / (60 / obj.frameSpeed) * (obj.frameEnd - 1)}s
-				steps(${obj.frameEnd - 1})
+				${1 / (60 / obj.frameSpeed) * (obj.frameEnd - obj.frameStart)}s
+				steps(${obj.frameEnd - obj.frameStart})
 				infinite
 			`;
 		}
@@ -143,7 +143,7 @@ function swapUiScreens() {
 		return $label;
 	}
 
-	let createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackOnclick) {
+	const createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackOnclick) {
 		document.getElementById(windowID).innerHTML = "";
 
 		for(const key of Object.keys(elementsToDisplay)) {

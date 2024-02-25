@@ -1,15 +1,16 @@
 class Sprite {
 	constructor({
 		src,
-		x=0,
-		y=0,
+		x = 0,
+		y = 0,
 		width,
 		height,
-		sy=0,
-		animate=false,
-		sWidth=width,
-		sHeight=height,
-		frameSpeed=18
+		sy = 0,
+		animate = false,
+		sWidth = width,
+		sHeight = height,
+		frameSpeed = 18,
+		frameStart = 1
 	}) {
 		this.img = new Image();
 		this.src = src;
@@ -25,7 +26,7 @@ class Sprite {
 		this.sHeight = sHeight;
 		this.frameRate = 0;
 		this.frameSpeed = frameSpeed;
-		this.frameStart = 1;
+		this.frameStart = frameStart;
 		this.frameEnd = 5;
 	}
 }
@@ -69,6 +70,7 @@ class Character extends Sprite {
 		sy = 0,
 		animate,
 		frameSpeed,
+		frameStart,
 		name,
 		key,
 		bio,
@@ -84,7 +86,8 @@ class Character extends Sprite {
 			height,
 			sy,
 			animate,
-			frameSpeed
+			frameSpeed,
+			frameStart
 		});
 		this.speakingClothesSrc = speakingClothesSrc;
 		this.name = name;
@@ -110,6 +113,7 @@ class Player extends Character {
 		height = 64,
 		sy,
 		frameSpeed,
+		frameStart,
 		name,
 		bio,
 		room,
@@ -125,6 +129,7 @@ class Player extends Character {
 			y: SCREEN_HEIGHT / 2 - height / 2,
 			sy,
 			frameSpeed,
+			frameStart,
 			name,
 			key: "player",
 			bio,
@@ -182,6 +187,7 @@ class Npc extends Character {
 		sy,
 		animate,
 		frameSpeed,
+		frameStart = 0,
 		bio,
 		room,
 		textColor,
@@ -199,6 +205,7 @@ class Npc extends Character {
 			sy,
 			animate,
 			frameSpeed,
+			frameStart,
 			name,
 			key,
 			bio,
