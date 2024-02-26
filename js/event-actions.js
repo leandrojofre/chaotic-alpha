@@ -284,7 +284,7 @@ async function animationInteract(...buttons) {
 			$button.executeAction = button.event;
 			changeElementStyle($button, [
 				["position", "absolute"],
-				["backgroundColor", "rgba(255, 0, 255, 0.5)"],
+				// ["backgroundColor", "rgba(255, 0, 255, 0.5)"],
 				["width", `${button.w}px`],
 				["height", `${button.h}px`],
 				["top", `${button.y}px`],

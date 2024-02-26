@@ -52,12 +52,12 @@ Room.prototype.drawRoof = function() {
 	context.imageSmoothingEnabled = false;
 	context.drawImage(this.roofImg, this.x, this.y, this.width, this.height);
 
-	for (const TILE of this.events)
-		TILE.drawColor("rgba(0, 255, 0, 0.3)");
-	for (const TILE of this.collisions)
-		TILE.drawColor("rgba(255, 0, 0, 0.3)");
-	for (const TILE of this.foregrounds)
-		TILE.drawColor("rgba(0, 0, 255, 0.3)");
+	// for (const TILE of this.events)
+	// 	TILE.drawColor("rgba(0, 255, 0, 0.3)");
+	// for (const TILE of this.collisions)
+	// 	TILE.drawColor("rgba(255, 0, 0, 0.3)");
+	// for (const TILE of this.foregrounds)
+	// 	TILE.drawColor("rgba(0, 0, 255, 0.3)");
 }
 
 Room.prototype.move = function(x, y) {
