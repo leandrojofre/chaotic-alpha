@@ -77,6 +77,10 @@ div{
 	}
 }
 
+.button:hover, button:hover {
+	background-color: #362121;
+}
+
 .unstyled-button {
 	cursor: url(./img/cursor1.png) 20 20, pointer;
 }
@@ -180,6 +184,16 @@ div{
 		center;
 }
 
+#main-menu {
+	& .button:hover {
+		background-color: #724046;
+
+		& p {
+			-webkit-text-fill-color: #e3b898;
+		}
+	}
+}
+
 #game {
 	border: 5px solid #331212;
 	width: var(--screen-width);
@@ -276,6 +290,7 @@ div{
 	background-color: #362121;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 
 	& .button {
 		height: 24px;
@@ -290,13 +305,6 @@ div{
 
 	& p {
 		-webkit-text-fill-color: #efe8d3;
-	}
-
-	& div {
-		display: flex;
-		height: -webkit-fill-available;
-		flex-direction: column;
-		justify-content: center;
 	}
 }
 

@@ -51,7 +51,7 @@ function selectUiButton() {
 		if ($button.checked) {
 			$button.labels[0].style.backgroundColor = "#362121";
 			buttonSelected = $button;
-		} else $button.labels[0].style.backgroundColor = "#724046";
+		} else $button.labels[0].style.backgroundColor = "";
 	}
 
 	return buttonSelected;

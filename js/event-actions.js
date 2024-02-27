@@ -169,8 +169,10 @@ function showCheckedButtonActBox() {
 	let enabledRadioButtons = arrayRadioButtons.filter($radioButton => !$radioButton.disabled);
 
 	for (const $radioButton of enabledRadioButtons) {
-		if ($radioButton.checked)
+		if ($radioButton.checked) {
+			$radioButton.labels[0].style.backgroundColor = "#efe8d3";
 			document.getElementById(`action-box-${$radioButton.id}`).style.display = "block";
+		}
 		else document.getElementById(`action-box-${$radioButton.id}`).style.display = "none";
 	}
 }
