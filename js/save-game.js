@@ -101,13 +101,9 @@ function setItemLStorage(key, value) {
 async function saveGame() {
 	
 	if (animationHandler !== undefined) return alert("No vas romper mi juego");
-	
-	stopGameUpdate();
 
 	setItemLStorage("player", JSON.stringify(player));
 	setItemLStorage("npcs", JSON.stringify(NPCS));
 	setItemLStorage("rooms", JSON.stringify(ROOMS));
 	setItemLStorage("items", JSON.stringify(ITEMS));
-
-	startGameUpdate()
 }

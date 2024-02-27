@@ -10,7 +10,8 @@ class Sprite {
 		sWidth = width,
 		sHeight = height,
 		frameSpeed = 18,
-		frameStart = 0
+		frameStart = 0,
+		frameEnd = 5
 	}) {
 		this.img = new Image();
 		this.src = src;
@@ -27,7 +28,7 @@ class Sprite {
 		this.frameRate = 0;
 		this.frameSpeed = frameSpeed;
 		this.frameStart = frameStart;
-		this.frameEnd = 5;
+		this.frameEnd = frameEnd;
 	}
 }
 
@@ -71,6 +72,7 @@ class Character extends Sprite {
 		animate,
 		frameSpeed,
 		frameStart = 1,
+		frameEnd,
 		name,
 		key,
 		bio,
@@ -87,7 +89,8 @@ class Character extends Sprite {
 			sy,
 			animate,
 			frameSpeed,
-			frameStart
+			frameStart,
+			frameEnd
 		});
 		this.speakingClothesSrc = speakingClothesSrc;
 		this.name = name;
@@ -114,6 +117,7 @@ class Player extends Character {
 		sy,
 		frameSpeed,
 		frameStart,
+		frameEnd,
 		name,
 		bio,
 		room,
@@ -130,6 +134,7 @@ class Player extends Character {
 			sy,
 			frameSpeed,
 			frameStart,
+			frameEnd,
 			name,
 			key: "player",
 			bio,
@@ -188,6 +193,7 @@ class Npc extends Character {
 		animate,
 		frameSpeed,
 		frameStart,
+		frameEnd,
 		bio,
 		room,
 		textColor,
@@ -206,6 +212,7 @@ class Npc extends Character {
 			animate,
 			frameSpeed,
 			frameStart,
+			frameEnd,
 			name,
 			key,
 			bio,
@@ -271,16 +278,13 @@ AnimationHandler.prototype.stopAnimationLoop = function(sx, sy) {
 
 	this.animate = false;
 	this.setFrame(sx, sy);
-
-	animationUpdate();
 }
 
 AnimationHandler.prototype.setAnimationLoop = function(startIndex, endIndex, sy, frameSpeed) {
-	this.stopAnimationLoop(endIndex - 1, sy);
+	this.stopAnimationLoop(startIndex, sy);
 	this.frameStart = startIndex;
 	this.frameEnd = endIndex;
 	this.frameSpeed = frameSpeed;
-	this.sy = sy * this.sHeight;
 	this.animate = true;
 
 	animationUpdate();
@@ -289,7 +293,7 @@ AnimationHandler.prototype.setAnimationLoop = function(startIndex, endIndex, sy,
 AnimationHandler.prototype.setAnimation = async function(startIndex, endIndex, sy, frameSpeed) {
 	const FRAME_DURATION_SEC = 1 / (60 / frameSpeed);
 	
-	this.setFrame(startIndex, sy);
+	this.stopAnimationLoop(startIndex, sy);
 	await timeOut(FRAME_DURATION_SEC);
 
 	for (let i = 1; i < endIndex; i++) {

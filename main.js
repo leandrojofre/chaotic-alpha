@@ -53,8 +53,6 @@ function drawObjects() {
 
 	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
-
-	thisRoom.drawWarning();
 }
 
 function gameUpdate() {
