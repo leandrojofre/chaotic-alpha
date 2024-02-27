@@ -77,6 +77,11 @@ EventTile.prototype.drawWarning = function(target) {
 	);
 }
 
+EventTile.prototype.changePropertieValue = function(propName, newValue) {
+	this.properties.find(prop => prop.name === propName).value = newValue;
+	this.customProperties[propName] = newValue;
+}
+
 class ForegroundTile extends Tile {
 	constructor({ x, y, img, width, height, sx = x, sy = y }) {
 		super(x, y, false, width, height);

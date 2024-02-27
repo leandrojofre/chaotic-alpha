@@ -66,3 +66,8 @@ Room.prototype.move = function(x, y) {
 
 	[...this.events, ...this.collisions, ...this.foregrounds].forEach(tile => tile.move(x, y));
 }
+
+Room.prototype.findEventTile = function(eventName) {
+	for (const tile of this.events) 
+		if (tile.name === eventName) return tile;
+}
