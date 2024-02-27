@@ -17,16 +17,15 @@ async function startEvent(eventTrigger) {
 	if (eventTrigger.type === "npc") {
 		stopGameUpdate();
 
-		let npc = NPCS[eventTriggerName.toLowerCase()];
-		let npcName = npc.name.toLowerCase();
+		let npc = NPCS[eventTriggerName];
 
 		if (
-			EVENTS_NPCS[npcName][npc.lvl] === undefined ||
-			EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression] === undefined
+			EVENTS_NPCS[npc.key][npc.lvl] === undefined ||
+			EVENTS_NPCS[npc.key][npc.lvl][npc.lvlProgression] === undefined
 		)
 			return console.log("No hay más contenido");
 
-		await EVENTS_NPCS[npcName][npc.lvl][npc.lvlProgression]();
+		await EVENTS_NPCS[npc.key][npc.lvl][npc.lvlProgression]();
 		return startGameUpdate();
 	}
 
@@ -52,7 +51,7 @@ function selectUiButton() {
 		if ($button.checked) {
 			$button.labels[0].style.backgroundColor = "#362121";
 			buttonSelected = $button;
-		} else $button.labels[0].style.backgroundColor = "#724046";
+		} else $button.labels[0].style.backgroundColor = "";
 	}
 
 	return buttonSelected;
@@ -80,24 +79,20 @@ function fillNpcsInfo() {
 	const npcList = Array.from(document.getElementsByName("npcs-info-selector"));
 	const selectedNpc = NPCS[npcList.find(npc => npc.checked).id];
 
-	$npcInfo.style.display = "flex";
+	if (document.getElementById("npc-display-img").src !== selectedNpc.speakingClothesSrc)
+		document.getElementById("npc-display-img").src = selectedNpc.speakingClothesSrc;
 
-	if (document.getElementById("npc-bio")?.innerText !== selectedNpc.bio) {
-		$npcInfo.innerHTML = `
-			<div id="npc-stats-back-button" class="button"><p>BACK</p></div>
-			<div class="stats-info has-custom-background">
-				<img src="${selectedNpc.speakingClothesSrc}" class="speaker">
-				<div>
-					<p id="npc-name">${selectedNpc.name}</p>
-					<p id="npc-bio">${selectedNpc.bio}</p>
-				</div>
-			</div>
-			<div id="custom-info-npc" class="custom-info has-custom-background"></div>
-		`;
-	}
+	if (document.getElementById("npc-bio").innerText !== selectedNpc.bio)
+		document.getElementById("npc-bio").innerText = selectedNpc.bio;
+
+	if (document.getElementById("npc-name").innerText !== selectedNpc.name)
+		document.getElementById("npc-name").innerText = selectedNpc.name;
+
+	$npcInfo.style.display = "flex";
 
 	document.getElementById("npc-stats-back-button").addEventListener("click", () => {
 		document.getElementById("npc-list").parentNode.style.display = "flex";
+		npcList.forEach(input => input.checked = false);
 		$npcInfo.style.display = "none";
 	}, {once: true});
 }
@@ -116,26 +111,49 @@ function swapUiScreens() {
 		return;
 	}
 
-	let createInfoSelector = function(obj, radioName, callBackName) {
-		return `
-			<label class="unstyled-button">
-				<input type="radio" name="${radioName}-info-selector" id="${obj.key}" class="radio" onclick="${callBackName}()"></input>
-				<img src='${obj.img.src}'>
-			</label>
-		`;
+	const createInfoSelector = function(obj, radioName, callBack) {
+		const $label = document.createElement("label");
+		$label.className = "unstyled-button";
+
+		const $input = document.createElement("input");
+		$input.type = "radio";
+		$input.className = "radio";
+		$input.name = `${radioName}-info-selector`;
+		$input.id = obj.key;
+		$input.onclick = () => callBack()
+
+		const $img = document.createElement("img");
+		$img.src = obj.img.src;
+
+		if (radioName === "npcs") {
+			$img.style.setProperty("--sprite-width", `${obj.img.width * -1}px`);
+			$img.style.setProperty("--step-start", `${obj.frameStart * obj.width * -1}px`);
+			$img.style.translate = `0px -${obj.sy * 2}px`;
+			$img.style.animation = `
+				idle
+				${1 / (60 / obj.frameSpeed) * (obj.frameEnd - obj.frameStart)}s
+				steps(${obj.frameEnd - obj.frameStart})
+				infinite
+			`;
+		}
+
+		$label.appendChild($input);
+		$label.appendChild($img);
+
+		return $label;
 	}
 
-	let createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackName) {
+	const createSelectionWindow = function(windowID, elementsToDisplay, radioName, callBackOnclick) {
 		document.getElementById(windowID).innerHTML = "";
 
 		for(const key of Object.keys(elementsToDisplay)) {
 			const obj = elementsToDisplay[key];
-			document.getElementById(windowID).innerHTML += createInfoSelector(obj, radioName, callBackName);
+			document.getElementById(windowID).appendChild(createInfoSelector(obj, radioName, callBackOnclick));
 		}
 	}
 
 	if (buttonName === "ITEMS") {
-		createSelectionWindow("item-bag", player.inventory, "items", "fillItemsInfo");
+		createSelectionWindow("item-bag", player.inventory, "items", fillItemsInfo);
 
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "flex";
@@ -144,7 +162,7 @@ function swapUiScreens() {
 	}
 
 	if (buttonName === "NPCS") {
-		createSelectionWindow("npc-list", NPCS, "npcs", "fillNpcsInfo");
+		createSelectionWindow("npc-list", NPCS, "npcs", fillNpcsInfo);
 
 		document.getElementById("player-stats").style.display = "none";
 		document.getElementById("items").style.display = "none";
@@ -157,13 +175,13 @@ function detectResumeKey(e) {
 	if (e.key.toLowerCase() === 'q') resumeGame();
 }
 
-function resumeGame() {
+function resumeGame(can_startGameUpdate = true) {
 	document.getElementById("inventory").style.display = "none";
 	document.getElementById("game").style.display = "flex";
 	window.removeEventListener("keydown", detectResumeKey);
-	document.getElementById("npc-stats-back-button").click();
+	document.getElementById("npc-stats-back-button")?.click();
 
-	startGameUpdate();
+	if (can_startGameUpdate) startGameUpdate();
 }
 
 function pauseGame() {

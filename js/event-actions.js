@@ -36,21 +36,13 @@ function changeRoom(roomName, tileName) {
 const SPEAKERS = {
 	npc: {
 		name: "",
-		position: 0,
-		clothe: ""
+		position: 0
 	},
 	player: {
 		name: "player",
-		position: 1,
-		clothe: "default"
+		position: 1
 	}
 };
-				
-function setSpeakers(optionsNpc, clothePlayer) {
-	SPEAKERS.npc = optionsNpc;
-	SPEAKERS.player.position = 1 - optionsNpc.position;
-	SPEAKERS.player.clothe = clothePlayer ?? "default";
-}
 
 async function timeOut(timeInSeconds) {
 	await new Promise(resolve => setTimeout(resolve, timeInSeconds * 1000));
@@ -85,69 +77,57 @@ function generateDialogue(text, textBox) {
 		["webkitTextFillColor", speaker.textColor],
 		["backgroundColor", speaker.textBackground],
 		["border", `4px solid ${speaker.textColor}`]
-	])
-	
+	]);
+
+	textBox.style.setProperty("--scrollbar-color", speaker.textColor);	
 	textBox.innerHTML = `<p>${speaker.name}:</p><p>${dialogue}</p>`;
 }
 
-async function changeSpeakerImg(speakerKey) {
-	let speaker = SPEAKERS[speakerKey];
-
-	const $SPEAKER = document.getElementById(`speaker-${speaker.position}`);
+async function setSpeakerImg(speakerKey) {
+	let speakerConfig = SPEAKERS[speakerKey];
+	const $SPEAKER = document.getElementById(`speaker-${speakerConfig.position}`);
 	
-	if ($SPEAKER.src.includes(`/img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`))
+	if ($SPEAKER.src.includes(speakerConfig.character.speakingClothesSrc))
 		return;
 
-	$SPEAKER.src = `./img/npc/${speaker.name}/speak-clothe-${speaker.clothe}.png`;
-	
-	await loadImages([$SPEAKER]);
-}
-
-async function changeClothes(objKey, clothe) {
-	SPEAKERS[objKey].clothe = clothe;
-	await changeSpeakerImg(objKey);
-}
-
-function generateJsonDialogueArray(array) {
-	let jsonDialogueArray = [];
-
-	for (let i = 0, j = 0; i < array.length; i++) {
-		const element = array[i];
-		
-		if (typeof element === "string") {
-			jsonDialogueArray[j] = {};
-			jsonDialogueArray[j].text = element;
-			j++;
-		}
-
-		if (typeof element === "function")
-			jsonDialogueArray[j - 1].event = element;
-	}
-
-	return jsonDialogueArray;
+	$SPEAKER.src = speakerConfig.character.speakingClothesSrc;
 }
 
 async function readDialogues(dialogues, targetBoxElement) {
-	for (const DIALOGUE of generateJsonDialogueArray(dialogues)) {
-		generateDialogue(DIALOGUE.text, targetBoxElement);
-		await awaitClick(document);
-
-		if (DIALOGUE.event !== undefined) {
-			await DIALOGUE.event();
+	for (const DIALOGUE of dialogues) {
+		if (typeof DIALOGUE === "string") {
+			generateDialogue(DIALOGUE, targetBoxElement);
+			await awaitClick(document);
+			continue;
 		}
-		
+
+		if (typeof DIALOGUE === "function")
+			await DIALOGUE();		
 	}
 }
 
+async function changeClothes(objKey, clothe) {
+	let speakerConfig = SPEAKERS[objKey];
+	speakerConfig.character.speakingClothesSrc = `./img/npc/${speakerConfig.name}/speak-clothe-${clothe}.png`;
+	await setSpeakerImg(objKey);
+}
+
 async function speakWithNpc(dialogues) {
-	await changeSpeakerImg("npc");
-	await changeSpeakerImg("player");
+	await setSpeakerImg("npc");
+	await setSpeakerImg("player");
 	drawBlackBackground();
 	$TEXT_BOX_OVERWORLD.style.display = "flex";
 
 	await readDialogues(dialogues, $TEXT_BOX_NPC_SPEAK);
 	await timeOut(0.25);
 	$TEXT_BOX_OVERWORLD.style.display = "none";
+}
+
+function setSpeakers(optionsNpc) {
+	SPEAKERS.npc = optionsNpc;
+	SPEAKERS.npc.character = NPCS[optionsNpc.name];
+	SPEAKERS.player.position = 1 - optionsNpc.position;
+	SPEAKERS.player.character = player;
 }
 
 // * ANIMATIONS
@@ -158,6 +138,7 @@ function animationUpdate() {
 	if (animationHandler.animate)
 		animationID = window.requestAnimationFrame(animationUpdate);
 
+	context.clearRect(0, 0, ANIMATION_WIDTH, ANIMATION_HEIGHT);
 	animationHandler.draw();
 }
 
@@ -169,39 +150,18 @@ async function setAnimationHandler(animationHandlerOptions) {
 async function startAnimation(animationHandlerOptions) {
 	animationHandlerOptions.width = ANIMATION_WIDTH;
 	animationHandlerOptions.height = ANIMATION_HEIGHT;
-	animationHandlerOptions.sWidth = ANIMATION_WIDTH / 2;
-	animationHandlerOptions.sHeight = ANIMATION_HEIGHT / 2;
 	await setAnimationHandler(animationHandlerOptions);
-
+	
 	$ANIMATION_BOX.style.display = "flex";
 	context = $CANVAS_ANIMATION.getContext('2d');
 	animationUpdate();
 }
 
 function stopAnimation() {
-	window.cancelAnimationFrame(animationID);
-	animationHandler = undefined;
 	$ANIMATION_BOX.style.display = "none";
-}
-
-function toggleTextBoxAnimation() {
-	if ($SPEAK_ANIMATION.style.display === "flex") {
-		$SPEAK_ANIMATION.style.display = "none";
-		$ACTION_BUTTONS.style.display = "flex";
-	} else if ($SPEAK_ANIMATION.style.display === "none") {
-		$SPEAK_ANIMATION.style.display = "flex";
-		$ACTION_BUTTONS.style.display = "none";
-	}
-}
-
-async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
-	await startAnimation(animationHandlerOptions);
-	$SPEAK_ANIMATION.style.display = "flex";
-
-	await readDialogues(dialogues, $SPEAK_ANIMATION);
-	$SPEAK_ANIMATION.style.display = "none";
-
-	stopAnimation();
+	window.cancelAnimationFrame(animationID);
+	animationHandler.animate = false;
+	animationHandler = undefined;
 }
 
 function showCheckedButtonActBox() {
@@ -209,8 +169,10 @@ function showCheckedButtonActBox() {
 	let enabledRadioButtons = arrayRadioButtons.filter($radioButton => !$radioButton.disabled);
 
 	for (const $radioButton of enabledRadioButtons) {
-		if ($radioButton.checked)
+		if ($radioButton.checked) {
+			$radioButton.labels[0].style.backgroundColor = "#efe8d3";
 			document.getElementById(`action-box-${$radioButton.id}`).style.display = "block";
+		}
 		else document.getElementById(`action-box-${$radioButton.id}`).style.display = "none";
 	}
 }
@@ -249,8 +211,29 @@ function enableRadioButtons(arrayIDs) {
 	})
 }
 
+function toggleTextBoxAnimation() {
+	if ($SPEAK_ANIMATION.style.display === "flex") {
+		$SPEAK_ANIMATION.style.display = "none";
+		$ACTION_BUTTONS.style.display = "flex";
+	} else if ($SPEAK_ANIMATION.style.display === "none") {
+		$SPEAK_ANIMATION.style.display = "flex";
+		$ACTION_BUTTONS.style.display = "none";
+	}
+}
+
 function createActionButton(x, y , w, h, ev) {
-	return {x: x * 64, y: y * 64, w: w * 64, h: h * 64, event: ev};
+	const TILE_AMOUNT_X = animationHandler.sWidth / WIDTH;
+	const TILE_AMOUNT_Y = animationHandler.sHeight / HEIGHT;
+	const RESIZE_NUMBER_X = ANIMATION_WIDTH / TILE_AMOUNT_X;
+	const RESIZE_NUMBER_Y = ANIMATION_HEIGHT / TILE_AMOUNT_Y;
+
+	return {
+		x: x * RESIZE_NUMBER_X,
+		y: y * RESIZE_NUMBER_Y,
+		w: w * RESIZE_NUMBER_X,
+		h: h * RESIZE_NUMBER_Y,
+		event: ev
+	};
 }
 
 async function animationInteract(...buttons) {
@@ -303,7 +286,7 @@ async function animationInteract(...buttons) {
 			$button.executeAction = button.event;
 			changeElementStyle($button, [
 				["position", "absolute"],
-				["backgroundColor", "rgba(255, 0, 255, 0.5)"],
+				// ["backgroundColor", "rgba(255, 0, 255, 0.5)"],
 				["width", `${button.w}px`],
 				["height", `${button.h}px`],
 				["top", `${button.y}px`],
@@ -330,4 +313,14 @@ async function animationInteract(...buttons) {
 		new Promise(resolve => resolveActionQueue(element, resolve))
 	));
 	toggleTextBoxAnimation();
+}
+
+async function speakWithNpcAnimation(dialogues, animationHandlerOptions) {
+	await startAnimation(animationHandlerOptions);
+	$SPEAK_ANIMATION.style.display = "flex";
+
+	await readDialogues(dialogues, $SPEAK_ANIMATION);
+	$SPEAK_ANIMATION.style.display = "none";
+
+	stopAnimation();
 }

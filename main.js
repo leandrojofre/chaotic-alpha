@@ -31,6 +31,13 @@ function moveObjects(x, y) {
 		thisRoomItems[KEY].move(x, y);
 }
 
+function drawWarnings() {
+	for (const KEY of Object.keys(thisRoomNpcs))
+		if (thisRoomNpcs[KEY].drawWarning()) return;
+	
+	thisRoom.drawWarning();
+}
+
 function drawObjects() {
 	thisRoom.draw();
 	let drawables = [player];
@@ -46,8 +53,6 @@ function drawObjects() {
 
 	drawables.sort((a, b) => (a.y + a.height) - (b.y + b.height));
 	drawables.forEach(obj => obj.draw());
-
-	thisRoom.drawWarning();
 }
 
 function gameUpdate() {
@@ -57,6 +62,7 @@ function gameUpdate() {
 	thisRoom.drawBackground();
 	drawObjects();
 	thisRoom.drawRoof();
+	drawWarnings();
 	
 	player.walk();
 }
@@ -114,7 +120,7 @@ async function loadImages(images) {
 		interval = setInterval(() => {
 			if (loadIsFinished)
 				resolve(clearInterval(interval));
-		}, 100)
+		}, 50)
 	);
 }
 
@@ -168,12 +174,12 @@ function createTileObjects(room, jsonData) {
 			const X = j * WIDTH;
 			const Y = i * HEIGHT;
 			if (tile === SIMBOL_COLLISION) 
-				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
+				room.collisions.push(new CollisionTile({ x: X, y: Y, width: WIDTH, height: HEIGHT }));
 			if (tile === SIMBOL_FOREGROUND) 
-				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
+				room.foregrounds.push(new ForegroundTile({ x: X, y: Y, img: room.foregroundImg }));
 			if (tile === SIMBOL_COLLISION_FOREGROUND) {
-				room.collisions.push(new CollisionTile(X, Y, WIDTH, HEIGHT));
-				room.foregrounds.push(new ForegroundTile(X, Y, room.foregroundImg));
+				room.collisions.push(new CollisionTile({ x: X, y: Y, width: WIDTH, height: HEIGHT }));
+				room.foregrounds.push(new ForegroundTile({ x: X, y: Y, img: room.foregroundImg }));
 			}
 		});
 	});
@@ -189,8 +195,23 @@ function createTileObjects(room, jsonData) {
 	joinTiles(room.foregrounds);
 }
 
+function loadTileObjects(room) {
+	
+	room.events = room.events.map(tile => new EventTile(tile));
+	room.collisions = room.collisions.map(tile => new CollisionTile(tile));
+	room.foregrounds = room.foregrounds.map(tile => {
+		tile.img = room.foregroundImg;
+		return new ForegroundTile(tile);
+	});
+}
+
 async function createCollisionsInRooms() {
 	for (const KEY of Object.keys(ROOMS)) {
+		if (ROOMS[KEY].events.length > 0 && !(ROOMS[KEY].events[0] instanceof Tile)) {
+			loadTileObjects(ROOMS[KEY]);
+			continue;
+		}
+
 		let jsonData;
 
 		await fetch(`./tiled/${ROOMS[KEY].name}.json`)
@@ -210,7 +231,7 @@ function setLoadingScreen(extraText = "") {
 
 	const takeTextInfo = (text) => {return context.measureText(text);};
 	
-	context.font = "16px PressStart2P";
+	context.font = "32px Ohrenstead";
 	context.fillStyle = "white";
 
 	let loadingText = "Loading.." + extraText;
@@ -224,7 +245,7 @@ async function startGame() {
 	document.getElementById("game").style.display = "flex";
 	
 	setLoadingScreen(" Font");
-	await loadFonts("PressStart2P", "./PressStart2P-Regular.ttf");
+	await loadFonts("Ohrenstead", "./Ohrenstead.ttf");
 
 	$CANVAS_OVERWORLD.style.display = "flex";
 
@@ -237,12 +258,16 @@ async function startGame() {
 
 			for (const KEY of Object.keys(json)) {
 				if (KEY === "player") continue;
+				json[KEY].key = KEY;
 				NPCS[KEY] = new Npc(json[KEY]);
-				NPCS[KEY].key = KEY;
 				imagesToLoad.push(NPCS[KEY].img);
 			}
 
 			await loadImages(imagesToLoad);
+			
+			player.frameEnd = player.img.width / player.sWidth;
+			for (const key of Object.keys(NPCS))
+				NPCS[key].frameEnd = NPCS[key].img.width / NPCS[key].sWidth;
 		});
 
 	setLoadingScreen(" Room");

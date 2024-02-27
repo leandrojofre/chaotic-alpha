@@ -1,5 +1,15 @@
 class Room {
-	constructor({ name, x = 0, y = 0, width, height, backgroundColor }) {
+	constructor({
+		name,
+		x = 0,
+		y = 0,
+		width,
+		height,
+		backgroundColor,
+		events = [],
+		collisions = [],
+		foregrounds = []
+	}) {
 		this.name = name;
 		this.backgroundColor = backgroundColor;
 		this.x = x;
@@ -16,9 +26,9 @@ class Room {
 		this.roofImg = new Image();
 		this.roofImg.src = `./img/room/${name}/roof.png`;
 
-		this.events = [];
-		this.collisions = [];
-		this.foregrounds = [];
+		this.events = events;
+		this.collisions = collisions;
+		this.foregrounds = foregrounds;
 	}
 }
 
@@ -55,4 +65,9 @@ Room.prototype.move = function(x, y) {
 	this.y += y;
 
 	[...this.events, ...this.collisions, ...this.foregrounds].forEach(tile => tile.move(x, y));
+}
+
+Room.prototype.findEventTile = function(eventName) {
+	for (const tile of this.events) 
+		if (tile.name === eventName) return tile;
 }

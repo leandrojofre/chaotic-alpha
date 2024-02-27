@@ -1,32 +1,22 @@
 {
 	"player": {
-		"src": "./img/npc/player/overworld.png",
-		"speakingClothesSrc": "./img/npc/player/speak-clothe-default.png",
 		"name": "Kofe",
 		"bio": "The vessel of chaos",
 		"room": "home",
-		"width": 32,
-		"height": 64,
-		"sy": 0,
 		"frameSpeed": 8,
 		"textColor": "#462c39",
 		"textBackground": "#ee5e5c"
 	},
 	"placeholder": {
-		"src": "./img/npc/placeholder/overworld.png",
 		"speakingClothesSrc": "./img/npc/placeholder/speak-clothe-default.png",
-		"name": "Placeholder",
+		"name": "???",
 		"bio": "Omnipotent entity",
 		"room": "home",
-		"x": 224,
+		"x": 208,
 		"y": 288,
-		"width": 32,
-		"height": 64,
-		"sy": 0,
 		"animate": true,
 		"frameSpeed": 12,
-		"lvl": 0,
-		"lvlProgression": 0,
+		"frameStart": 3,
 		"textColor": "black",
 		"textBackground": "white"
 	}

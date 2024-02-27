@@ -10,6 +10,7 @@
 	<body>
 		<section id="main-menu" class="menu">
 			<div id="start-button" class="button"><p>PLAY</p></div>
+			<div class="button" onclick="loadGame()"><p>LOAD</p></div>
 		</section>
 
 		<section id="game">
@@ -31,17 +32,15 @@
 				</div>
 
 				<div id="action-buttons">
-					<input id="test1" type="radio" name="action-button" class="radio">
-						<label for="test1" class="animation-action">
-							<img src="./img/button-test1.png">
-						</label>
-					</input>
+					<label class="animation-action">
+						<input id="test1" type="radio" name="action-button" class="radio"></input>
+						<img src="./img/button-test1.png">
+					</label>
 
-					<input id="test2" type="radio" name="action-button" class="radio">
-						<label for="test2" class="animation-action">
-							<img src="./img/button-test2.png">
-						</label>
-					</input>
+					<label class="animation-action">
+						<input id="test2" type="radio" name="action-button" class="radio"></input>
+						<img src="./img/button-test2.png">
+					</label>
 				</div>
 
 				<p id="speak-animation"></p>
@@ -50,7 +49,6 @@
 
 		<section id="inventory" class="menu">
 			<div id="inventory-ui">
-				<div>
 					<div class="button" onclick="resumeGame()"><p>RESUME</p></div>
 	
 					<label class="button">
@@ -67,7 +65,14 @@
 						<p>NPCS</p>
 						<input type="radio" name="ui-button" class="radio"></input>
 					</label>
-				</div>
+
+					<div class="button" onclick="saveGame()">
+						<p>SAVE</p>
+					</div>
+
+					<div class="button" onclick="loadGameFromPause()">
+						<p>LOAD</p>
+					</div>
 			</div>
 
 			<div id="player-stats" class="stats-window" style="display: none;">
@@ -98,7 +103,17 @@
 				<div class="has-custom-background" style="size: -webkit-fill-avaible;">
 					<div id="npc-list"></div>
 				</div>
-				<div id="npc-stats" class="stats-window" style="display: none;"></div>
+				<div id="npc-stats" class="stats-window" style="display: none;">
+					<div id="npc-stats-back-button" class="button"><p>BACK</p></div>
+					<div class="stats-info has-custom-background">
+						<img id="npc-display-img" class="speaker">
+						<div>
+							<p id="npc-name"></p>
+							<p id="npc-bio"></p>
+						</div>
+					</div>
+					<div id="custom-info-npc" class="custom-info has-custom-background"></div>
+				</div>
 			</div>
 		</section>
 
@@ -119,5 +134,6 @@
 		<script src="js/event-listeners.js"></script>
 		
 		<script src="main.js"></script>
+		<script src="js/save-game.js"></script>
 	</body>
 </html>

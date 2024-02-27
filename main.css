@@ -11,8 +11,8 @@
 }
 
 @font-face {
-	font-family: PressStart2P;
-	src: url(./PressStart2P-Regular.ttf) format("opentype");
+	font-family: Ohrenstead;
+	src: url(./Ohrenstead.ttf) format("opentype");
 	font-display: block;
 }
 
@@ -21,7 +21,7 @@ html {
 }
 
 body {
-	font-family: 'PressStart2P', cursive;
+	font-family: 'Ohrenstead', cursive;
 	margin: 0px;
 	overflow-y: hidden;
 	background-color: #4b2121;
@@ -33,11 +33,12 @@ img {
 }
 
 p {
-	padding: 3px 3px;
+	padding: 3px;
 	margin: 0px;
-	font-size: 10px;
+	-webkit-font-smoothing: subpixel-antialiased;
+	font-size: 32px;
 	overflow-wrap: break-word;
-	line-height: 13px;
+	line-height: 20px;
 }
 
 div{
@@ -69,11 +70,15 @@ div{
 
 	& p {
 		padding: 0px;
-		font-size: 16px;
+		font-size: 32px;
 		line-height: 16px;
 		transform: translateY(1px);
 		-webkit-text-fill-color: #331212;
 	}
+}
+
+.button:hover, button:hover {
+	background-color: #362121;
 }
 
 .unstyled-button {
@@ -114,6 +119,10 @@ div{
 	& p {
 		word-break: break-word;
 		-webkit-text-fill-color: #362121;
+	}
+
+	& #player-name {
+		-webkit-text-fill-color: #724046;
 	}
 }
 
@@ -173,6 +182,16 @@ div{
 		right,
 		bottom,
 		center;
+}
+
+#main-menu {
+	& .button:hover {
+		background-color: #724046;
+
+		& p {
+			-webkit-text-fill-color: #e3b898;
+		}
+	}
 }
 
 #game {
@@ -242,7 +261,17 @@ div{
 #speak-animation {
 	display: none;
 	height: 64px;
-	width: 736px;	
+	width: 736px;
+	--scrollbar-color: #331212;
+
+	& ::-webkit-scrollbar-thumb {
+		background-color: var(--scrollbar-color);
+	}
+
+	& :last-child {
+		overflow-y: scroll;
+		clip-path: content-box;
+	}
 }
 
 #inventory {
@@ -261,6 +290,7 @@ div{
 	background-color: #362121;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 
 	& .button {
 		height: 24px;
@@ -275,13 +305,6 @@ div{
 
 	& p {
 		-webkit-text-fill-color: #efe8d3;
-	}
-
-	& div {
-		display: flex;
-		height: -webkit-fill-available;
-		flex-direction: column;
-		justify-content: center;
 	}
 }
 
@@ -321,16 +344,20 @@ div{
 		& div {
 			display: flex;
 			flex-direction: column;
-			gap: 4px;
+			overflow-y: scroll;
+			clip-path: content-box;
 			padding: 24px 24px 24px 0px;
 			height: auto;
 		}
 
 		& p {
-		    word-break: break-word;
-		    font-size: 8px;
-		    line-height: 4px;
-		    -webkit-text-fill-color: #362121;
+			word-break: break-word;
+			font-size: 32px;
+			-webkit-text-fill-color: #362121;
+		}
+
+		& #item-name {
+			-webkit-text-fill-color: #724046;
 		}
 	}
 }
@@ -352,12 +379,13 @@ div{
 		& label {
 			display: block;
 			overflow: hidden;
-			width: calc((var(--sprite-width) * 2) / 5);
-			height: calc((var(--sprite-width) * 2) / 2.5);
+			width: 128px;
+			height: 128px;
 
 			& img {
-				width: calc(var(--sprite-width) * 2);
-				transform: translateY(-1px);
+				width: auto;
+				transform: scale(2);
+				transform-origin: left top;
 			}
 		}
 	}
@@ -372,7 +400,18 @@ div{
 			& div {
 				height: -webkit-fill-available;
 				width: auto;
-				padding: 24px 24px 24px 0px;
+				clip-path: content-box;
+				padding: 24px 24px 28px 0px;
+
+				& #npc-name {
+					-webkit-text-fill-color: #724046;
+				}
+
+				& #npc-bio {
+					padding: 2px 3px 32px;
+					overflow-y: scroll;
+					height: -webkit-fill-available;
+				}
 			}
 		}
 
@@ -382,10 +421,21 @@ div{
 
 		.button {
 			width: 128px;
-			height: 16px;
+			height: 24px;
 
-			& p {font-size: 12px;}
+			& p {
+				font-size: 32px;
+			}
 		}
+	}
+}
+
+@keyframes idle {
+	0% {
+		object-position: var(--step-start) 0;
+	}
+	100% {
+		object-position: var(--sprite-width) 0;
 	}
 }
 
@@ -397,14 +447,11 @@ div{
 	width: 10px;
 	height: 8px;
 }
+
 ::-webkit-scrollbar-track {
-	background: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #ac3232;
-	border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: #ac3232;
+	background-color: #331212;
 }
