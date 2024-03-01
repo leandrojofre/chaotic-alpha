@@ -94,16 +94,12 @@ async function loadGameFromPause() {
 	changeRoom(player.room, "playerSpawn");
 }
 
-function setItemLStorage(key, value) {
-	localStorage.setItem(key, value);
-}
-
 async function saveGame() {
 	
 	if (animationHandler !== undefined) return alert("No vas romper mi juego");
 
-	setItemLStorage("player", JSON.stringify(player));
-	setItemLStorage("npcs", JSON.stringify(NPCS));
-	setItemLStorage("rooms", JSON.stringify(ROOMS));
-	setItemLStorage("items", JSON.stringify(ITEMS));
+	localStorage.setItem("player", JSON.stringify(player));
+	localStorage.setItem("npcs", JSON.stringify(NPCS));
+	localStorage.setItem("rooms", JSON.stringify(ROOMS));
+	localStorage.setItem("items", JSON.stringify(ITEMS));
 }
