@@ -12,14 +12,7 @@ const SCREEN_WIDTH = 960;
 const SCREEN_HEIGHT = 640;
 const ANIMATION_WIDTH = 512;
 const ANIMATION_HEIGHT = 512;
-const KEY_PRESSED = {
-	w: false,
-	a: false,
-	s: false,
-	d: false,
-	e: false,
-	shift: false
-};
+const KEY_PRESSED = {};
 const EVENT_WARNINGS = {
 	exclamation: new Image(),
 	talk: new Image()

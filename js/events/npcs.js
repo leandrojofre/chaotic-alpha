@@ -54,7 +54,7 @@ const EVENTS_NPCS = {
 					},
 					"placeholder/ We knew the world would not be the same. A few people laughed, a few people cried. Most people were silent. I remembered the line from the Hindu scripture, the Bhagavad-Gita. Vishnu is trying to persuade the Prince that he should do his duty, and, to impress him, takes on his multi-armed form and says, 'Now I am become Death, the destroyer of worlds.' I suppose we all thought that, one way or another.",
 					"player/ ¿What?",
-					"placeholder/ A test for the overflowing text."
+					"placeholder/ A test for the overflowing text.",
 				], {
 					src: "./img/npc/placeholder/animationEv-0-0.png",
 					sWidth: 256,
@@ -62,7 +62,7 @@ const EVENTS_NPCS = {
 				});
 
 				await speakWithNpc([
-					"placeholder/ Enjoy your day and try to not die!"
+					"placeholder/ Enjoy your day and try to not die!",
 				])
 
 				ITEMS.core_of_chaos.sendToInventory();
@@ -77,7 +77,10 @@ const EVENTS_NPCS = {
 				
 				await changeClothes("npc", "test");
 				await speakWithNpc([
-					"placeholder/ That's all"
+					async () => NPCS.placeholder.name = "reyalP",
+					"placeholder/ That's all",
+					"player/ And now you shapeshifted.. ¿Another 'test'?",
+					"placeholder/ He's just like me fr",
 				]);
 			}
 		]

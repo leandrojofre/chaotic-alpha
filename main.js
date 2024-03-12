@@ -77,7 +77,7 @@ function stopPlayerInput() {
 	window.removeEventListener("keyup", keyUp);
 
 	for (const KEY of Object.keys(KEY_PRESSED))
-		KEY_PRESSED[KEY] = false;
+		if (!(KEY === "lastKeyX" || KEY === "lastKeyY")) KEY_PRESSED[KEY] = false;
 }
 
 function startGameUpdate() {

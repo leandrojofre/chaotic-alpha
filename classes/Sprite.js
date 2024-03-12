@@ -69,7 +69,7 @@ class Character extends Sprite {
 		width,
 		height,
 		sy = 0,
-		animate,
+		animate = true,
 		frameSpeed,
 		frameStart = 1,
 		frameEnd,
@@ -108,6 +108,23 @@ class Character extends Sprite {
 	}
 }
 
+Character.prototype.setLoop = function(sy, frameStart, frameEnd, frameSpeed) {
+	if (
+		sy === (this.sy / this.sHeight) &&
+		frameStart === this.frameStart &&
+		frameEnd === this.frameEnd &&
+		frameSpeed === this.frameSpeed
+	) return;
+
+	this.animate = true;
+	this.frameRate = 0;
+	this.sy = sy * this.sHeight;
+	this.sx = frameStart * this.sWidth;
+	this.frameStart = frameStart;
+	this.frameEnd = frameEnd;
+	this.frameSpeed = frameSpeed;
+}
+
 class Player extends Character {
 	constructor({
 		src = "./img/npc/player/overworld.png",
@@ -115,9 +132,9 @@ class Player extends Character {
 		width = 64,
 		height = 64,
 		sy,
-		frameSpeed,
+		frameSpeed = 10,
 		frameStart,
-		frameEnd,
+		frameEnd = 6,
 		name,
 		bio,
 		room,
@@ -146,26 +163,55 @@ class Player extends Character {
 		this.Vx = 0;
 		this.Vy = 0;
 		this.acceleration = 1;
+		this.loops = {
+			idle: () => {
+				if (KEY_PRESSED.shift) return this.loops.run();
+				if (KEY_PRESSED.lastKeyX === "d") return this.setLoop(0, 0, 6, 10);
+				if (KEY_PRESSED.lastKeyX === "a") return this.setLoop(1, 0, 6, 10);
+			},
+			walk: () => {
+					if (KEY_PRESSED.d && KEY_PRESSED.lastKeyX === "d") this.Vx = -BASE_VELOCITY;
+				else if (KEY_PRESSED.a && KEY_PRESSED.lastKeyX === "a") this.Vx = BASE_VELOCITY;
+					if (KEY_PRESSED.w && KEY_PRESSED.lastKeyY === "w") this.Vy = BASE_VELOCITY;
+				else if (KEY_PRESSED.s && KEY_PRESSED.lastKeyY === "s") this.Vy = -BASE_VELOCITY;
+
+				this.hitbox.Vx = this.Vx;
+				this.hitbox.Vy = this.Vy;
+				if (KEY_PRESSED.shift) return this.loops.run();
+				if (KEY_PRESSED.lastKeyX === "d") return this.setLoop(2, 0, 4, 9);
+				if (KEY_PRESSED.lastKeyX === "a") return this.setLoop(3, 0, 4, 9);
+			},
+			run: () => {
+				this.acceleration = 3;
+				this.hitbox.acceleration = 3;
+				if (KEY_PRESSED.lastKeyX === "d") return this.setLoop(4, 0, 5, 5);
+				if (KEY_PRESSED.lastKeyX === "a") return this.setLoop(5, 0, 5, 5);
+			},
+		}
 	}
 }
 
 Player.prototype.walk = function() {
-	this.hitbox.Vx = this.Vx;
-	this.hitbox.Vy = this.Vy;
-
-	KEY_PRESSED.shift ?
-		(this.acceleration = 2, this.hitbox.acceleration = 2) :
-		(this.acceleration = 1, this.hitbox.acceleration = 1);
-
-	if ((KEY_PRESSED.w || KEY_PRESSED.s) && !this.hitbox.collided('y'))
-		moveObjects(0, this.Vy * this.acceleration);
-	if ((KEY_PRESSED.a || KEY_PRESSED.d) && !this.hitbox.collided('x'))
-		moveObjects(this.Vx * this.acceleration, 0);
-	
-	if (!KEY_PRESSED.a && !KEY_PRESSED.d && !KEY_PRESSED.w && !KEY_PRESSED.s) {
-		this.animate = false;
-		this.sx = 0;
+	if (KEY_PRESSED.q) return this.loops.idle(), pauseGame();
+	if (KEY_PRESSED.e) {
+		KEY_PRESSED.e = false;
+		let event = catchEvent();
+		if (event !== undefined) return this.loops.idle(), startEvent(event);
 	}
+
+	this.Vy = 0;
+	this.Vx = 0;
+	this.hitbox.Vx = 0;
+	this.hitbox.Vy = 0;
+	this.acceleration = 1;
+	this.hitbox.acceleration = 1;
+	
+	if (KEY_PRESSED.a || KEY_PRESSED.d || KEY_PRESSED.w || KEY_PRESSED.s)
+		this.loops.walk();
+	else this.loops.idle();
+
+	if (!this.hitbox.collided('y')) moveObjects(0, this.Vy * this.acceleration);
+	if (!this.hitbox.collided('x')) moveObjects(this.Vx * this.acceleration, 0);	
 }
 
 Player.prototype.addItem = function(item) {

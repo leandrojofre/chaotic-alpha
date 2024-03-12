@@ -3,7 +3,7 @@
 		"name": "Kofe",
 		"bio": "The vessel of chaos",
 		"room": "home",
-		"frameSpeed": 8,
+		"frameSpeed": 10,
 		"textColor": "#462c39",
 		"textBackground": "#ee5e5c"
 	},
@@ -14,7 +14,6 @@
 		"room": "home",
 		"x": 208,
 		"y": 288,
-		"animate": true,
 		"frameSpeed": 12,
 		"frameStart": 3,
 		"textColor": "black",

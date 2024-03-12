@@ -195,73 +195,24 @@ function pauseGame() {
 
 function keyDown(e) {
 	let key = e.key.toLowerCase();
+	
+	if (key === "e") return KEY_PRESSED.e = false;
 
-	switch (key) {
-		case "w":
-			player.animate = true;
-			player.Vy = BASE_VELOCITY;
-			KEY_PRESSED.w = true;
-			break;
-		case "s":
-			player.animate = true;
-			player.Vy = -BASE_VELOCITY;
-			KEY_PRESSED.s = true;
-			break;
-		case "a":
-			player.animate = true;
-			player.Vx = BASE_VELOCITY;
-			player.sy = player.height;
-			KEY_PRESSED.a = true;
-			break;
-		case "d":
-			player.animate = true;
-			player.Vx = -BASE_VELOCITY;
-			player.sy = 0;
-			KEY_PRESSED.d = true;
-			break;
-		case "q":
-			pauseGame();
-			break;
-		case "shift":
-			KEY_PRESSED.shift = true;
-			break;
-		default:
-			break;
-	}
+	KEY_PRESSED[key] = true;
+	
+	if (key === "a" || key === "d") KEY_PRESSED.lastKeyX = key;
+	if (key === "w" || key === "s") KEY_PRESSED.lastKeyY = key;
 }
 
 function keyUp(e) {
 	let key = e.key.toLowerCase();
+	
+	if (key === "e") return KEY_PRESSED.e = true;
 
-	switch (key) {
-		case "w":
-			KEY_PRESSED.w = false;
-			if (KEY_PRESSED.s) return player.Vy = -BASE_VELOCITY;
-			player.Vy = 0;
-			break;
-		case "s":
-			KEY_PRESSED.s = false;
-			if (KEY_PRESSED.w) return player.Vy = BASE_VELOCITY;
-			player.Vy = 0;
-			break;
-		case "a":
-			KEY_PRESSED.a = false;
-			if (KEY_PRESSED.d) return player.Vx = -BASE_VELOCITY, player.sy = 0;
-			player.Vx = 0;
-			break;
-		case "d":
-			KEY_PRESSED.d = false;
-			if (KEY_PRESSED.a) return player.Vx = BASE_VELOCITY, player.sy = player.sHeight;
-			player.Vx = 0;
-			break;
-		case "e":
-			let event = catchEvent();
-			if (event !== undefined) startEvent(event);
-			break;
-		case "shift":
-			KEY_PRESSED.shift = false;
-			break;
-		default:
-			break;
-	}
+	KEY_PRESSED[key] = false;
+
+	if (key === "a" && KEY_PRESSED.d) KEY_PRESSED.lastKeyX = "d";
+	if (key === "d" && KEY_PRESSED.a) KEY_PRESSED.lastKeyX = "a";
+	if (key === "w" && KEY_PRESSED.s) KEY_PRESSED.lastKeyY = "s";
+	if (key === "s" && KEY_PRESSED.w) KEY_PRESSED.lastKeyY = "w";
 }
